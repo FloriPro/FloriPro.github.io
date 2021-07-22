@@ -9,6 +9,14 @@ h2{
   text-indent:1rem;
 }
 
+footer{
+  background-color: rgb(102, 102, 102);
+  color: rgb(24, 24, 24);
+
+  width: 100%;
+  text-align: center;
+}
+
 
 
 .topnav {
