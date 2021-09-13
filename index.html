@@ -8,10 +8,18 @@
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="/cookie.js"></script>
     <script src="/main.js"></script>
+    <script>
+        //edit document
+    </script>
     <title>FloriPro</title>
 </head>
 
 <body>
+    <?php
+        echo "Hallo, ich bin ein PHP-Skript!";
+    ?>
+
+
     <div class="CookieAccept">
         <h2>Cookies</h2>
         <p>Diese Website benutzt Cookies.</p>
@@ -26,7 +34,6 @@
         <h1>FloriPro</h1>
         <div class="topnav">
             <a href="/">Home</a>
-            <a href="/impressum">Impressum</a>
         </div>
 
 
@@ -69,10 +76,10 @@
         <p>Wenn du hier spenden würdest, würde das mich sehr unterstützen</p>
         <p style="padding-bottom: 25%;"></p>
 
-
         <footer>
             <p>Copyright 2021-2021 FloriPro</p>
-            <a href="/impressum">Impressum</p>
+            <a href="/impressum">Impressum</p></a>
+            <button type="button" onclick="if(document.designMode=='off'){document.designMode = 'on';}else{document.designMode = 'off';}">edit (dev)</button>
         </footer>
     </div>
 </body>

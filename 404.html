@@ -1,8 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="FloriPro-Dateien/main.css">
+    <script src="FloriPro-Dateien/jquery-2.js"></script>
+    <script src="FloriPro-Dateien/cookie.js"></script>
+    <script src="FloriPro-Dateien/main.js"></script>
+    <script>
+        //edit document
+    </script>
+    <title>FloriPro</title>
+</head>
 
 <body>
-    <p>That went wrong</p>
-</body>
+    <div class="CookieAccept" style="display: none;">
+        <h2>Cookies</h2>
+        <p>Diese Website benutzt Cookies.</p>
+        <p>akzeptiere dies, um die Website zu nutzen.
+        </p>
+        <button class="AcceptCookie" onclick="AcceptCookie()">Cookies Akzeptieren</button>
+    </div>
+    
 
-</html>
+    <div class="Site" id="top">
+        <a href="#top" class="UpButton" style="font-size: 30px;">Up</a>
+        <h1>FloriPro</h1>
+        <div class="topnav">
+            <a href="http://localhost/">Home</a>
+        </div>
+
+
+        <!--<div class="topnav2" id="topnav2">
+            <a href="#allgemein">Allgemein</a>
+        </div>-->
+
+        <br>
+        <p>Die von dir gewünschte Seite ist leider nicht erreichbar...</p><p><br></p><p>(Error Code: 404)<br></p>
+        
+        <footer>
+            <p>Copyright 2021-2021 FloriPro</p>
+            <a href="http://localhost/impressum">Impressum<p></p></a>
+            <button type="button" onclick="if(document.designMode=='off'){document.designMode = 'on';}else{document.designMode = 'off';}">edit (dev)</button>
+        </footer>
+    </div>
+
+
+</body></html>
