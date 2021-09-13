@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-
-<html>
-
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/main.css" />
+    <link rel="stylesheet" href="/main.css">
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="/cookie.js"></script>
     <script src="/main.js"></script>
@@ -17,14 +13,14 @@
 <body>
 
 
-    <div class="CookieAccept">
+    <div class="CookieAccept" style="display: none;">
         <h2>Cookies</h2>
         <p>Diese Website benutzt Cookies.</p>
         <p>akzeptiere dies, um die Website zu nutzen.
         </p>
         <button class="AcceptCookie" onclick="AcceptCookie()">Cookies Akzeptieren</button>
     </div>
-    </div>
+    
 
     <div class="Site" id="top">
         <a href="#top" class="UpButton" style="font-size: 30px;">Up</a>
@@ -70,15 +66,14 @@
         <h2 id="spenden">
             Spenden
         </h2>
-        <p>Wenn du hier spenden würdest, würde das mich sehr unterstützen</p>
+        
         <p style="padding-bottom: 25%;"></p>
 
-        <footer>
+        <footer id="footer">
             <p>Copyright 2021-2021 FloriPro</p>
-            <a href="/impressum">Impressum</p></a>
-            <button type="button" onclick="if(document.designMode=='off'){document.designMode = 'on';}else{document.designMode = 'off';}">edit (dev)</button>
+            <a href="/impressum">Impressum<p></p></a>
         </footer>
     </div>
-</body>
 
-</html>
+
+</body>
