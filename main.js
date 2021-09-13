@@ -6,21 +6,16 @@ $(document).on('click', 'a[href^="#"]', function (event) {
     }, 500);
 });
 
-/*function up() {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-}*/
 
 
-
-function addEditButton(){
+function addEditButton() {
 
     var myDiv = document.getElementById("footer");
 
     // create the button object and add the text to it
     var button = document.createElement("BUTTON");
     button.innerHTML = "edit (dev)";
-    button.className="designModeEdit";
+    button.className = "designModeEdit";
     button.onclick = designModeToggle;
     myDiv.appendChild(button);
 
@@ -28,35 +23,49 @@ function addEditButton(){
     //<button class="designModeEdit" type="button" onclick="if(document.designMode=='off'){document.designMode = 'on';}else{document.designMode = 'off';}">edit (dev)</button>
 
 }
-
-window.addEventListener('load', function (){
-    if (window.location.hostname=="localhost"){
-        addEditButton();
-//this.document.getElementsByClassName("designModeEdit")[0].style.display = "block";
+function footerRezise(){
+    if (document.getElementById('body').scrollHeight > document.getElementById('body').clientHeight) {
+        console.log('scrollable');
+        document.getElementById("footer").style.position = "static";
+        document.getElementById("footer").style.lineHeight= "50px";
+        
+    } else {
+        console.log('not');
+        document.getElementById("footer").style.position = "fixed";
+        document.getElementById("footer").style.lineHeight= "20px";
     }
+}
+
+
+
+window.addEventListener('resize', function () {
+    footerRezise()
+})
+window.addEventListener('load', function () {
+    footerRezise()
 })
 
 function designModeToggle() {
-    if(document.designMode=='off'){
+    if (document.designMode == 'off') {
         document.designMode = 'on';
-    }else{
+    } else {
         removeElementsByClass("designModeEdit");
 
-        let loc = window.location.pathname+"index.html";
+        let loc = window.location.pathname + "index.html";
         let htmlData = document.documentElement.innerHTML;
         document.designMode = 'off';
         $.ajax({
             url: "http://localhost:8080/edithtml",
             method: "post",
-            data: { html: htmlData , file:loc}
+            data: { html: htmlData, file: loc }
         });
         addEditButton();
     }
 }
 
-function removeElementsByClass(className){
+function removeElementsByClass(className) {
     const elements = document.getElementsByClassName(className);
-    while(elements.length > 0){
+    while (elements.length > 0) {
         elements[0].parentNode.removeChild(elements[0]);
     }
 }

@@ -9,21 +9,19 @@ h2{
   text-indent:0rem;
 }
 
+
+
 footer{
   background-color: rgb(102, 102, 102);
   color: rgb(170, 170, 170);
 
   width: 100%;
-  text-align: center;
+  height: 50px;
+  text-align:center;
+  line-height: 50px;
+  
+  bottom:10;
 }
-
-footer a:link {
-  color: rgb(170, 170, 170); 
-}
-footer a:visited {
-  color: rgb(155, 155, 155); 
-}
-
 
 .UpButton{
   position:fixed;
