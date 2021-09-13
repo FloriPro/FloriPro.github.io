@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html><head>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="main.css">
-    <script src="jquery-2.js"></script>
-    <script src="cookie.js"></script>
-    <script src="main.js"></script>
+    <link rel="stylesheet" href="/main.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="/cookie.js"></script>
+    <script src="/main.js"></script>
     <script>
-        //edit document
+            //edit document
     </script>
     <title>FloriPro</title>
 </head>
@@ -20,7 +18,7 @@
         </p>
         <button class="AcceptCookie" onclick="AcceptCookie()">Cookies Akzeptieren</button>
     </div>
-    
+
 
     <div class="Site" id="top">
         <a href="#top" class="UpButton" style="font-size: 30px;">Up</a>
@@ -35,12 +33,18 @@
         </div>-->
 
         <br>
-        <p>Die von dir gewünschte Seite ist leider nicht erreichbar...</p><p><br></p><p>(Error Code: 404)<br></p>
+        <p>Die von dir gewünschte Seite ist leider nicht erreichbar...</p>
+        <p>zurück zur vorherigen Seite? </p>
+        <button class="backToSiteBefore" type="button" onclick="history.back()">Zurück</button>
         
+        <br>
+        <p><br></p>
+        <p>(Error Code: 404)<br></p>
+
         <footer id="footer">
             <p>Copyright 2021-2021 FloriPro</p>
         </footer>
     </div>
 
 
-</body></html>
+</body>

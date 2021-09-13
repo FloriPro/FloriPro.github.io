@@ -11,6 +11,8 @@ $(document).on('click', 'a[href^="#"]', function (event) {
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }*/
 
+
+
 function addEditButton(){
 
     var myDiv = document.getElementById("footer");
@@ -22,7 +24,7 @@ function addEditButton(){
     button.onclick = designModeToggle;
     myDiv.appendChild(button);
 
-    
+
     //<button class="designModeEdit" type="button" onclick="if(document.designMode=='off'){document.designMode = 'on';}else{document.designMode = 'off';}">edit (dev)</button>
 
 }
