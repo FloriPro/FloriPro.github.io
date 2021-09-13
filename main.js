@@ -20,9 +20,9 @@ function addEditButton(){
     button.innerHTML = "edit (dev)";
     button.className="designModeEdit";
     button.onclick = designModeToggle;
-
-    // add the button to the div
     myDiv.appendChild(button);
+
+    
     //<button class="designModeEdit" type="button" onclick="if(document.designMode=='off'){document.designMode = 'on';}else{document.designMode = 'off';}">edit (dev)</button>
 
 }
