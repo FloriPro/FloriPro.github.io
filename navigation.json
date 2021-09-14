@@ -1,29 +1,15 @@
 {
-    "pages": [
-        "Home",
-        "Test"
-    ],
-    "elements": {
-        "Home": [
-            "Allgemein",
-            "News",
-            "Spenden"
-        ],
-        "Test": [
-            "T1",
-            "T2"
-        ]
+    "Home": {
+        "Allgemein": "Ich bin ein Typ der gerne unnötige sachen macht und will diese hier gerne zeigen.",
+        "News": "Ich mache nichts, also nichts LUL",
+        "Spenden": "tue es einfach nicht... <h4>das ist es nicht wert.</h4>"
     },
-
-    "Text":{
-        "Home":{
-            "Allgemein":"Ich bin ein Typ der gerne unnötige sachen macht und will diese hier gerne zeigen.",
-            "News":"Ich mache nichts, also nichts LUL",
-            "Spenden":"tue es einfach nicht... <h4>das ist es nicht wert.</h4>"
-        },
-        "Test":{
-            "T1":"T1 Text LUL",
-            "T2":"T2 Text LUL"
-        }
+    "Test": {
+        "T11": "T11 Text LUL",
+        "T12": "T12 Text LUL"
+    },
+    "Test2": {
+        "T21": "T21 Text LUL",
+        "T22": "T22 Text LUL"
     }
 }

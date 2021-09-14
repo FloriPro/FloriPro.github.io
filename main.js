@@ -1,11 +1,28 @@
 //smooth movement
 $(document).on('click', 'a[href^="#"]', function (event) {
+    var el = $.attr(this, 'href').replace("#", "");
     event.preventDefault();
-
     $('html, body').animate({
         scrollTop: $($.attr(this, 'href')).offset().top
     }, 500);
+    fadeOut(el);
 });
+function fadeOut(el) {
+    var ele = document.getElementById(el);
+    var blinkcooldown = 0;
+
+    var blinkWait = setInterval(function () {
+        blinkcooldown += 1;
+        if (blinkcooldown == 1) {
+            ele.style.backgroundColor = "rgb(0, 120, 215)";//0078d7
+        }
+        if (blinkcooldown >= 10) {
+            ele.style.backgroundColor = "rgba(0, 0, 0, 0)";
+            clearInterval(blinkWait);
+        }
+    }, 50);
+}
+
 
 function getCookie(name) {
     var dc,
@@ -46,7 +63,7 @@ window.addEventListener('resize', function () {
     footerRezise()
 })
 window.addEventListener('load', function () {
-    loadNavBarAndMore();
+    loadNavBarAndMore("Home");
 })
 
 
@@ -58,18 +75,26 @@ function removeElementsByClass(className) {
 }
 
 
+function changePage(pageName) {
+    loadNavBarAndMore(pageName);
+}
 
 
-function loadNavBarAndMore() {
+
+function loadNavBarAndMore(pageName) {
+    document.title="FloriPro | "+pageName;
     $.getJSON("/navigation.json", function (json) {
+
+        clearBoxClass("topnav");
+        clearBoxClass("topnav2");
+        clearBox("Text");
 
 
         //Pages
-        var pages = json.pages;
+        var pages = json;
         for (x in pages) {
-            page = pages[x];
+            page = x;
             pageLink = page;
-            if (page == "Home") { pageLink = ""; }
 
             //generate "a"
             addPageLink = document.createElement('a');
@@ -78,7 +103,7 @@ function loadNavBarAndMore() {
             addPageLink.appendChild(addPageLinkText);
 
             addPageLink.title = page;
-            addPageLink.href = "/" + pageLink;
+            addPageLink.href = "javascript:changePage('" + pageLink + "')";
             document.getElementsByClassName("topnav")[0].appendChild(addPageLink);
 
             //<a href="/">Home</a>
@@ -86,12 +111,13 @@ function loadNavBarAndMore() {
 
 
         //sub Pages
-        var name = window.location.pathname
-        if (name == "/") { name = "Home"; }
-        name = name.replace("/", "").replace("/", "");
-        var SubPageElements = json.elements[name]
+        //var name = window.location.pathname
+        var name = pageName;
+        //if (name == "/") { name = "Home"; }
+        //name = name.replace("/", "").replace("/", "");
+        var SubPageElements = json[name]
         for (x in SubPageElements) {
-            SubPageElement = SubPageElements[x];
+            SubPageElement = x;
 
             //generate "a"
             addPageLink = document.createElement('a');
@@ -106,7 +132,7 @@ function loadNavBarAndMore() {
 
         //Text/Headline for Page
         var t = document.getElementById("Text");
-        var Text = json.Text[name]
+        var Text = json[name]
         for (x in Text) {
             t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
             t.innerHTML += '<p>' + Text[x] + "</p>";
@@ -114,4 +140,12 @@ function loadNavBarAndMore() {
         }
         footerRezise()
     });
+}
+
+
+function clearBox(elementID) {
+    document.getElementById(elementID).innerHTML = "";
+}
+function clearBoxClass(elementClass) {
+    document.getElementsByClassName(elementClass)[0].innerHTML = "";
 }
