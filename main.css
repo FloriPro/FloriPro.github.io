@@ -23,6 +23,13 @@ footer{
   bottom:10;
 }
 
+a:link{
+  color: rgb(170, 170, 170);
+}
+a:visited {
+  color: rgb(170, 170, 170);
+}
+
 .UpButton{
   position:fixed;
   bottom: 0;

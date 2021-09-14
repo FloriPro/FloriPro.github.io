@@ -80,66 +80,76 @@ function changePage(pageName) {
 }
 
 
+function loadNavBarAndMoreJsonInput(json,pageName){
+    clearBoxClass("topnav");
+    clearBoxClass("topnav2");
+    clearBox("Text");
+
+
+    //Pages
+    var pages = json;
+    for (x in pages) {
+        page = x;
+        pageLink = page;
+
+        //generate "a"
+        addPageLink = document.createElement('a');
+
+        addPageLinkText = document.createTextNode(page);
+        addPageLink.appendChild(addPageLinkText);
+
+        addPageLink.title = page;
+        addPageLink.href = "javascript:changePage('" + pageLink + "')";
+        document.getElementsByClassName("topnav")[0].appendChild(addPageLink);
+
+        //<a href="/">Home</a>
+    }
+
+
+    //sub Pages
+    //var name = window.location.pathname
+    var name = pageName;
+    //if (name == "/") { name = "Home"; }
+    //name = name.replace("/", "").replace("/", "");
+    var SubPageElements = json[name]
+    for (x in SubPageElements) {
+        SubPageElement = x;
+
+        //generate "a"
+        addPageLink = document.createElement('a');
+
+        addPageLinkText = document.createTextNode(SubPageElement);
+        addPageLink.appendChild(addPageLinkText);
+
+        addPageLink.title = SubPageElement;
+        addPageLink.href = "#" + SubPageElement;
+        document.getElementsByClassName("topnav2")[0].appendChild(addPageLink);
+    }
+
+    //Text/Headline for Page
+    var t = document.getElementById("Text");
+    var Text = json[name]
+    for (x in Text) {
+        t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
+        t.innerHTML += '<p>' + Text[x] + "</p>";
+        t.innerHTML += '<p style="padding-bottom: 5%;"></p>';
+    }
+    footerRezise()
+}
+
 
 function loadNavBarAndMore(pageName) {
     document.title="FloriPro | "+pageName;
-    $.getJSON("/navigation.json", function (json) {
-
-        clearBoxClass("topnav");
-        clearBoxClass("topnav2");
-        clearBox("Text");
-
-
-        //Pages
-        var pages = json;
-        for (x in pages) {
-            page = x;
-            pageLink = page;
-
-            //generate "a"
-            addPageLink = document.createElement('a');
-
-            addPageLinkText = document.createTextNode(page);
-            addPageLink.appendChild(addPageLinkText);
-
-            addPageLink.title = page;
-            addPageLink.href = "javascript:changePage('" + pageLink + "')";
-            document.getElementsByClassName("topnav")[0].appendChild(addPageLink);
-
-            //<a href="/">Home</a>
-        }
-
-
-        //sub Pages
-        //var name = window.location.pathname
-        var name = pageName;
-        //if (name == "/") { name = "Home"; }
-        //name = name.replace("/", "").replace("/", "");
-        var SubPageElements = json[name]
-        for (x in SubPageElements) {
-            SubPageElement = x;
-
-            //generate "a"
-            addPageLink = document.createElement('a');
-
-            addPageLinkText = document.createTextNode(SubPageElement);
-            addPageLink.appendChild(addPageLinkText);
-
-            addPageLink.title = SubPageElement;
-            addPageLink.href = "#" + SubPageElement;
-            document.getElementsByClassName("topnav2")[0].appendChild(addPageLink);
-        }
-
-        //Text/Headline for Page
-        var t = document.getElementById("Text");
-        var Text = json[name]
-        for (x in Text) {
-            t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
-            t.innerHTML += '<p>' + Text[x] + "</p>";
-            t.innerHTML += '<p style="padding-bottom: 5%;"></p>';
-        }
-        footerRezise()
-    });
+    if (localStorage["jsonData"]==undefined)
+    {$.getJSON("/navigation.json", function (json) {
+        loadNavBarAndMoreJsonInput(json,pageName);
+        console.log("Saving");
+        localStorage.setItem('jsonData', JSON.stringify(json));
+    });}
+    else{
+        console.log("fromSave");
+        loadNavBarAndMoreJsonInput(JSON.parse(localStorage.getItem('jsonData')),pageName);
+    }
 }
 
 
@@ -148,4 +158,7 @@ function clearBox(elementID) {
 }
 function clearBoxClass(elementClass) {
     document.getElementsByClassName(elementClass)[0].innerHTML = "";
+}
+function delData(){
+    localStorage.removeItem("jsonData");
 }
