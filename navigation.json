@@ -1,0 +1,29 @@
+{
+    "pages": [
+        "Home",
+        "Test"
+    ],
+    "elements": {
+        "Home": [
+            "Allgemein",
+            "News",
+            "Spenden"
+        ],
+        "Test": [
+            "T1",
+            "T2"
+        ]
+    },
+
+    "Text":{
+        "Home":{
+            "Allgemein":"Ich bin ein Typ der gerne unnötige sachen macht und will diese hier gerne zeigen.",
+            "News":"Ich mache nichts, also nichts LUL",
+            "Spenden":"tue es einfach nicht... <h4>das ist es nicht wert.</h4>"
+        },
+        "Test":{
+            "T1":"T1 Text LUL",
+            "T2":"T2 Text LUL"
+        }
+    }
+}

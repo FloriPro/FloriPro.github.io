@@ -1,9 +1,10 @@
 <head>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/main.css">
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="/cookie.js"></script>
     <script src="/main.js"></script>
+    <script src="/cookie.js"></script>
     <script>
         //edit document
     </script>
@@ -12,8 +13,11 @@
 
 <body id="body">
 
+    <div class="alert" style="display: none; margin-top: -68px;"><span class="closebtn"
+            onclick="moveAwayEffect()">×</span>Herzlich wilkommen, auf meiner Seite. Du wirst hier leider nichts Finden,
+        da es nichts gibt... RIP<br></div>
 
-    <div class="CookieAccept" style="display: none;">
+    <div class="CookieAccept" id="CookieAccept" style="display: none; opacity: 0;">
         <h2>Cookies</h2>
         <p>Diese Website benutzt Cookies.</p>
         <p>akzeptiere dies, um die Website zu nutzen.
@@ -25,43 +29,21 @@
     <div class="Site" id="top" style="display: block;">
         <h1>FloriPro<br></h1>
         <div class="topnav">
-            <a href="/">Home</a>
         </div>
 
 
         <div class="topnav2" id="topnav2">
-            <a href="#allgemein">Allgemein</a>
-            <a href="#news">News</a>
-            <a href="#contact">Contact</a>
-            <a href="#about">About</a>
-            <a href="#spenden">Spenden</a>
         </div>
 
         <br>
-        <h2 id="allgemein">
-            Allgemein
-        </h2>
-        <p style="padding-bottom: 5%;">Ich bin ein Typ der gerne unnötige sachen macht und will diese hier gerne
-            zeigen.<br></p>
-        <p><br></p>
 
-        <br>
-        <h2 id="news">
-            News
-        </h2>
-        <p style="padding-bottom: 5%;">Ich mache nichts, also nichts LUL<br></p>
 
-        <br>
-        <h2 id="spenden">
-            Spenden</h2>
 
-        <p style="padding-bottom: 5%;">tue es einfach nicht... das ist es nicht wert.<br></p>
+        <div id="Text">
+        </div>
 
-        <footer id="footer">
+        <footer id="footer" style="position: fixed; line-height: 20px;">
             <p>Copyright 2021-2021 FloriPro</p>
-            <a href="/impressum">
-                <p></p>
-            </a>
         </footer>
         <a href="#top" class="UpButton" style="font-size: 30px;">Up</a>
     </div>
