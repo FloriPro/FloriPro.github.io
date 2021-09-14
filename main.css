@@ -37,7 +37,7 @@ footer{
 .topnav {
   z-index:100;
   width:100%;
-  position:sticky;
+  position:static;
   background-color: #333;
   overflow:auto;
 }
@@ -62,7 +62,7 @@ footer{
 .topnav2 {
   z-index:100;
   width:100%;
-  position:sticky;
+  position:static;
   background-color: rgb(90, 90, 90);
   overflow:auto;
 }
@@ -85,7 +85,7 @@ footer{
 
 
 .Site{
-  display:block;
+  display:unset;
 }
 .CookieAccept{
   display:none;
@@ -113,3 +113,31 @@ footer{
   margin:auto;
   display:block;
 }
+
+
+
+ /* The alert message box */
+ .alert {
+  padding: 20px;
+  background-color: #36f43f; /* Red */
+  color: rgb(0, 0, 0);
+  margin-bottom: 15px;
+  margin-top: 0;
+}
+
+/* The close button */
+.closebtn {
+  margin-left: 15px;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+  color: rgb(255, 255, 255);
+} 
