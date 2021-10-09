@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<head>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="/main.css">
+    <style>
+        h1 {
+            font-size: 70px;
+        }
+
+        p {
+            font-size: 50px;
+        }
+
+        button {
+            font-size: 500%;
+        }
+
+        select {
+            font-size: 200%;
+        }
+
+        input {
+            font-size: 500%;
+        }
+
+        /*.PostHidden {
+            display: none;
+        }*/
+    </style>
+</head>
+
+<body>
+    <div id="Post">
+        <h1 id="title">Loading...</h1>
+        <div id="text"></div>
+        <div id="img"></div>
+    </div>
+    <!--<div class="PostHidden">
+        <h1 id="title">Loading...</h1>
+        <div id="text"></div>
+        <div id="img"></div>
+    </div>-->
+    <button id="next" onclick="next()">Weiter<p style="padding-bottom: 2%;"></p></button><br><br>
+    <button id="change" style="font-size: 500%;" onclick="change()">Ver‰ndern</button>
+    <div id="options" style="display:none">
+        <br>
+        <br>
+        <select name="pets" id="showingType">
+            <option value="hot">Heiﬂ</option>
+            <option value="new">Neu</option>
+            <option value="top">Top</option>
+            <option value="rising">Steigend</option>
+        </select>
+        <input type="text" id="community" value="None">
+    </div>
+</body>

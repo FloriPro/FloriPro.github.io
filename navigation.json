@@ -4,12 +4,7 @@
         "News": "Ich mache nichts, also nichts LUL",
         "Spenden": "tue es einfach nicht... <h4>das ist es nicht wert.</h4>"
     },
-    "Test": {
-        "T11": "T11 Text LUL",
-        "T12": "T12 Text LUL"
-    },
-    "Test2": {
-        "T21": "T21 Text LUL",
-        "T22": "T22 Text LUL"
+    "Reddit": {
+        "Reddit":"!moveTo(\"/RedditApp\")"
     }
 }
