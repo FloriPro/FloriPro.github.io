@@ -5,6 +5,6 @@
         "Spenden": "tue es einfach nicht... <h4>das ist es nicht wert.</h4>"
     },
     "Reddit": {
-        "Reddit":"!moveTo(\"/RedditApp\")"
+        "Reddit":"!moveTo(\"/RedditApp.html\")"
     }
 }
