@@ -46,22 +46,7 @@ function getCookie(name) {
 }
 
 
-function footerRezise() {
-    if (document.getElementById('body').scrollHeight > document.getElementById('body').clientHeight) {
-        document.getElementById("footer").style.position = "static";
-        document.getElementById("footer").style.lineHeight = "50px";
 
-    } else {
-        document.getElementById("footer").style.position = "fixed";
-        document.getElementById("footer").style.lineHeight = "20px";
-    }
-}
-
-
-//make footerRezise
-window.addEventListener('resize', function () {
-    footerRezise()
-})
 window.addEventListener('load', function () {
     if (window.location.search==""){loadNavBarAndMore("Home")}else
     {loadNavBarAndMore(window.location.search.slice(1));}
