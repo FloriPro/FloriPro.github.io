@@ -9,6 +9,7 @@ var after = ""
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get("subreddit") != null) { subreddit = urlParams.get("subreddit"); }
 if (urlParams.get("after") != null) { after = urlParams.get("after"); }
+if (urlParams.get("sort") != null) { sort_by = urlParams.get("sort"); }
 
 url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
 
@@ -56,9 +57,10 @@ async function load(now, title, text, img) {
             audio = audio.substring(0, audio.indexOf('DASH'));
             audio = audio + "DASH_audio.mp4?source=fallback";
             img.innerHTML += "<video id='video_video' controls width='100%' height='100%' alt='loading...'><source src='" + now["media"]["reddit_video"]["fallback_url"] + "'></video>";
-            img.innerHTML += "<video id='video_audio' controls width='0%' height='0%' alt='loading...'><source src='" + audio + "'></video>";
-            video_video = document.getElementById("video_video");
+            img.innerHTML += "<audio id='video_audio' controls width='0%' height='0%' alt='loading...'><source src='" + audio + "'></audio>";
+
             video_audio = document.getElementById("video_audio");
+            video_video = document.getElementById("video_video");
 
             //wait until load
             video_video.addEventListener('loadeddata', function() {
@@ -83,6 +85,7 @@ async function load(now, title, text, img) {
                     video_video.addEventListener('canplay', videoPausePlayHandler, false);
                 }
             }, false);
+
         }
     }
     g = getImg(now);
@@ -171,7 +174,7 @@ function next() {
     img = document.getElementById("img")
 
     //set "subreddit" and after
-    let newUrlIS = window.location.origin + window.location.pathname + '?subreddit=' + subreddit + "&after=" + afterO;
+    let newUrlIS = window.location.origin + window.location.pathname + '?subreddit=' + subreddit + "&after=" + afterO + "&sort=" + sort_by;
     history.pushState({}, null, newUrlIS);
 
     //back
@@ -194,7 +197,7 @@ function back() {
     after = afterList[afterList.length - 1];
     afterList.pop();
 
-    let newUrlIS = window.location.origin + window.location.pathname + '?subreddit=' + subreddit + "&after=" + afterO;
+    let newUrlIS = window.location.origin + window.location.pathname + '?subreddit=' + subreddit + "&after=" + afterO + "&sort=" + sort_by;
     history.pushState({}, null, newUrlIS);
 
     url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + afterO;
