@@ -11,16 +11,15 @@ if (urlParams.get("subreddit") != null) { subreddit = urlParams.get("subreddit")
 if (urlParams.get("after") != null) { after = urlParams.get("after"); }
 
 url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
-console.log(url);
 
-
+var afterList = [];
 data = [];
 
 i = 0;
 
 function getImg(now) {
 
-    var imgs = []
+    var imgs = [];
     //if ("preview" in now) {
     //    for (x in now["preview"]["images"]) {
     //        imgs.push(now["preview"]["images"][x]["source"]["url"]);
@@ -32,16 +31,19 @@ function getImg(now) {
         }
     }
     if ("url" in now) {
-        console.log(now["url"]);
-        if (!now["url"].match(/.(jpg|jpeg|png|gif)$/i)) { } else { imgs.push(now["url"]) }
-    }//url_overridden_by_dest
+        if (!now["url"].match(/.(jpg|jpeg|png|gif)$/i)) {} else {
+            imgs.push(now["url"]);
+        }
+    } //url_overridden_by_dest
     return imgs
 }
-loaded=0;
+loaded = 0;
 async function load(now, title, text, img) {
 
     title.innerText = now["title"];
-    text.innerHTML = now["selftext_html"];
+    link = "https://reddit.com" + now["permalink"]
+    if (now["selftext_html"] != null) { selftext = now["selftext_html"] } else { selftext = "" }
+    text.innerHTML = selftext + "<a target='_blank' href='" + link + "'>reddit.com</p>";
     img.innerHTML = ""
     if (now["media"] != null) {
         if ("oembed" in now["media"]) {
@@ -53,83 +55,86 @@ async function load(now, title, text, img) {
             audio = now["media"]["reddit_video"]["fallback_url"];
             audio = audio.substring(0, audio.indexOf('DASH'));
             audio = audio + "DASH_audio.mp4?source=fallback";
-            console.log("AUDIO:");
-            console.log(audio);
             img.innerHTML += "<video id='video_video' controls width='100%' height='100%' alt='loading...'><source src='" + now["media"]["reddit_video"]["fallback_url"] + "'></video>";
             img.innerHTML += "<video id='video_audio' controls width='0%' height='0%' alt='loading...'><source src='" + audio + "'></video>";
-            video_video=document.getElementById("video_video");
-            video_audio=document.getElementById("video_audio");
+            video_video = document.getElementById("video_video");
+            video_audio = document.getElementById("video_audio");
 
             //wait until load
             video_video.addEventListener('loadeddata', function() {
-                loaded+=1;
-                if (loaded==2){
-                    video_audio.play();
+                loaded += 1;
+                if (loaded == 2) {
                     video_video.play();
                     video_video.addEventListener('play', videoPausePlayHandler, false);
                     video_video.addEventListener('pause', videoPausePlayHandler, false);
-                    video_video.addEventListener('seeking', videoPausePlayHandler, false);//unfinished
+                    video_video.addEventListener('seeking', videoPausePlayHandler, false);
+                    video_video.addEventListener('waiting', videoPausePlayHandler, false);
+                    video_video.addEventListener('canplay', videoPausePlayHandler, false);
                 }
-             }, false);
-             video_audio.addEventListener('loadeddata', function() {
-                loaded+=1;
-                if (loaded==2){
-                    video_audio.play();
+            }, false);
+            video_audio.addEventListener('loadeddata', function() {
+                loaded += 1;
+                if (loaded == 2) {
                     video_video.play();
                     video_video.addEventListener('play', videoPausePlayHandler, false);
                     video_video.addEventListener('pause', videoPausePlayHandler, false);
-
-                    
+                    video_video.addEventListener('seeking', videoPausePlayHandler, false);
+                    video_video.addEventListener('waiting', videoPausePlayHandler, false);
+                    video_video.addEventListener('canplay', videoPausePlayHandler, false);
                 }
-             }, false);
+            }, false);
         }
     }
     g = getImg(now);
-    console.log(g);
 
     for (x in g) {
-        console.log(x);
         img.innerHTML += "<img src='" + g[x] + "' width='100%' height='100%' alt='bild'></img>";
     }
 }
 
 function videoPausePlayHandler(e) {
+    video_audio.currentTime = video_video.currentTime;
     if (e.type == 'play') {
         video_audio.play();
     } else if (e.type == 'pause') {
         video_audio.pause();
+    } else if (e.type == 'waiting') {
+        video_audio.pause();
+    } else if (e.type == 'canplay') {
+        if (!video_video.paused) { video_audio.play(); }
     }
-  }
+}
 
-function preloadImages(array) {
-    if (!preloadImages.list) {
-        preloadImages.list = [];
-    }
-    var list = preloadImages.list;
-    for (var i = 0; i < array.length; i++) {
+function preloadImages(urls) {
+    console.log(urls);
+    var loadedCounter = 0;
+    var toBeLoadedNumber = urls.length;
+    urls.forEach(function(url) {
+        preloadImage(url, function() {
+            loadedCounter++;
+            console.log('Number of loaded images: ' + loadedCounter);
+        });
+    });
+
+    function preloadImage(url, anImageLoadedCallback) {
         var img = new Image();
-        img.onload = function () {
-            var index = list.indexOf(this);
-            if (index !== -1) {
-                // remove image from the array once it's loaded
-                // for memory consumption reasons
-                list.splice(index, 1);
-            }
-        }
-        list.push(img);
-        img.src = array[i];
+        img.onload = anImageLoadedCallback;
+        img.src = url;
     }
 }
 
 async function get(i) {
-    $.getJSON(url, function (json) {
-        console.log(json["data"]);
+    $.getJSON(url, function(json) {
         after = json["data"]["after"];
+
         j = json;
 
         now = json["data"]["children"][0]["data"];
 
+        preloadImages(getImg(now));
+
         if (i == 1) {
+            afterO = after
             title = document.getElementById("title")
             text = document.getElementById("text")
             img = document.getElementById("img")
@@ -138,26 +143,27 @@ async function get(i) {
             get(0)
         }
         if (i == 2) {
+            afterO = after
             title = document.getElementById("title")
             text = document.getElementById("text")
             img = document.getElementById("img")
             load(now, title, text, img);
+            //url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
             get(0)
-            url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
         }
         //show
         //document.getElementById("img").innerText=
     });
 }
-afterO=after
 if (after == "") {
     get(1)
 } else {
     url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
     get(2);
 }
+afterList = []
 async function next() {
-    loaded=0;
+    loaded = 0;
     i++;
     title = document.getElementById("title")
     text = document.getElementById("text")
@@ -167,21 +173,39 @@ async function next() {
     let newUrlIS = window.location.origin + window.location.pathname + '?subreddit=' + subreddit + "&after=" + afterO;
     history.pushState({}, null, newUrlIS);
 
+    //back
+    afterList.push(afterO);
+    if (afterList.length > 15) {
+        afterList.shift();
+    }
+
     //show and load new
     load(now, title, text, img);
     url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
+    afterO = after
     get(0)
-    afterO=after
-    
 
-    preloadImages(getImg(now));
+    window.scrollTo(0, 0);
+}
+
+async function back() {
+    afterO = afterList.at(-2);
+    after = afterList.at(-1);
+    afterList.pop();
+
+    let newUrlIS = window.location.origin + window.location.pathname + '?subreddit=' + subreddit + "&after=" + afterO;
+    history.pushState({}, null, newUrlIS);
+
+    url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + afterO;
+    get(1);
 }
 
 type = "watching"
+
 function change() {
     if (type == "watching") {
         document.getElementById("Post").style.display = "none";
-        document.getElementById("next").style.display = "none";
+        document.getElementById("buttons").style.display = "none";
         document.getElementById("change").innerText = "Fertig";
         document.getElementById("options").style.display = "unset";
         document.getElementById("showingType").value = sort_by;
@@ -189,7 +213,7 @@ function change() {
         type = "changeing"
     } else if (type == "changeing") {
         document.getElementById("Post").style.display = "unset";
-        document.getElementById("next").style.display = "unset";
+        document.getElementById("buttons").style.display = "inline-table";
         document.getElementById("options").style.display = "none";
         document.getElementById("change").innerText = "Verändern"
         sort_byO = sort_by;
@@ -200,13 +224,11 @@ function change() {
         if (sort_byO != sort_by) {
             after = "";
             url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
-            console.log(url);
             get(1);
         }
         if (subredditO != subreddit) {
             after = "";
             url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
-            console.log(url);
             get(1);
         }
     }
