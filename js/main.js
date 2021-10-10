@@ -1,5 +1,5 @@
 //smooth movement
-$(document).on('click', 'a[href^="#"]', function (event) {
+$(document).on('click', 'a[href^="#"]', function(event) {
     var el = $.attr(this, 'href').replace("#", "");
     event.preventDefault();
     $('html, body').animate({
@@ -7,14 +7,15 @@ $(document).on('click', 'a[href^="#"]', function (event) {
     }, 500);
     fadeOut(el);
 });
+
 function fadeOut(el) {
     var ele = document.getElementById(el);
     var blinkcooldown = 0;
 
-    var blinkWait = setInterval(function () {
+    var blinkWait = setInterval(function() {
         blinkcooldown += 1;
         if (blinkcooldown == 1) {
-            ele.style.backgroundColor = "rgb(0, 120, 215)";//0078d7
+            ele.style.backgroundColor = "rgb(0, 120, 215)"; //0078d7
         }
         if (blinkcooldown >= 10) {
             ele.style.backgroundColor = "rgba(0, 0, 0, 0)";
@@ -47,9 +48,8 @@ function getCookie(name) {
 
 
 
-window.addEventListener('load', function () {
-    if (window.location.search==""){loadNavBarAndMore("Home")}else
-    {loadNavBarAndMore(window.location.search.slice(1));}
+window.addEventListener('load', function() {
+    if (window.location.search == "") { loadNavBarAndMore("Home") } else { loadNavBarAndMore(window.location.search.slice(1)); }
 })
 
 
@@ -115,11 +115,13 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
     //Text/Headline for Page
     var t = document.getElementById("Text");
     var Text = json[name]
-    first=Object.keys(Text)[0]
+    first = Object.keys(Text)[0]
     if (Text[first].startsWith("!")) {
         eval(Text[first].slice(1));
-    }
-    else {
+    } else if (Text[first].startsWith("?")) {
+        t.innerHTML += Text[first].slice(1);
+
+    } else {
         for (x in Text) {
 
             t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
@@ -127,26 +129,24 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
             t.innerHTML += '<p style="padding-bottom: 5%;"></p>';
         }
     }
-    footerRezise()
 }
 
 
 function loadNavBarAndMore(pageName) {
     document.title = "FloriPro | " + pageName;
-    if (localStorage["jsonData"] == undefined) {
-        $.getJSON("/navigation.json", function (json) {
+    if (localStorage["jsonData"] == undefined || true) {
+        $.getJSON("/navigation.json", function(json) {
             loadNavBarAndMoreJsonInput(json, pageName);
             console.log("Saving");
             localStorage.setItem('jsonData', JSON.stringify(json));
         });
-    }
-    else {
+    } else {
         console.log("fromSave");
         loadNavBarAndMoreJsonInput(JSON.parse(localStorage.getItem('jsonData')), pageName);
     }
 
     //change url
-    let newUrlIS =  window.location.origin + '/?'+pageName;
+    let newUrlIS = window.location.origin + '/?' + pageName;
     history.pushState({}, null, newUrlIS);
 }
 
@@ -154,15 +154,17 @@ function loadNavBarAndMore(pageName) {
 function clearBox(elementID) {
     document.getElementById(elementID).innerHTML = "";
 }
+
 function clearBoxClass(elementClass) {
     document.getElementsByClassName(elementClass)[0].innerHTML = "";
 }
+
 function delData() {
     localStorage.removeItem("jsonData");
     location.reload();
 }
 
-function moveTo(link){
+function moveTo(link) {
     console.log(link)
-    window.location=link;
+    window.location = link;
 }

@@ -2,7 +2,7 @@
 
 <head>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="RedditApp.js"></script>
+    <script src="js/RedditApp.js"></script>
     <link rel="stylesheet" href="/main.css">
     <style>
         h1 {
@@ -27,34 +27,37 @@
         /*.PostHidden {
             display: none;
         }*/
+        
+        .changMeme {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            background-color: #ddd;
+            color: black;
+            border-radius: 5px;
+            text-decoration: none;
+            bottom: 5px;
+            right: 5px;
+        }
     </style>
 </head>
 
 <body>
-    <div id="Post">
-        <h1 id="title">Loading...</h1>
-        <div id="text"></div>
-        <div id="img"></div>
+    <div id="postSection">
+        <div id="Post">
+            <h1 id="title">Loading...</h1>
+            <div id="text"></div>
+            <div id="img"></div>
+        </div>
     </div>
     <!--<div class="PostHidden">
         <h1 id="title">Loading...</h1>
         <div id="text"></div>
         <div id="img"></div>
     </div>-->
-    <table style="width: 100%;height: 100%; display: inline-table;" id="buttons">
-        <tr>
-            <td>
-                <button style="float: right;width: 100%;text-align: center;height: 20rem;padding-top: 3rem;" id="back" onclick="back()"><--</p></button>
-            </td>
-            <td>
-                <button style="float: right;width: 100%;text-align: center;height: 20rem;padding-top: 3rem;" id="next" onclick="next()">--></p></button>
-            </td>
-        </tr>
 
-
-    </table>
-
-    <button id="change" style="font-size: 500%;" onclick="change()">Verändern</button>
+    <button id="change" style="font-size: 500%;" onclick="change()">Einstellungen</button>
+    <button id="doAsList" style="font-size: 500%;" onclick="list()">Liste</button>
     <div id="options" style="display:none">
         <br>
         <br>
@@ -66,4 +69,15 @@
         </select>
         <input type="text" id="community" value="None">
     </div>
+    <p style="padding-bottom: 20rem;"></p>
+    <table style="width: 100%; display: inline-table;" class="changMeme" id="buttons">
+        <tr>
+            <td>
+                <button style="float: right;width: 100%;text-align: center;height: 20rem;padding-top: 3rem;" id="back" onclick="back()"><--</p></button>
+            </td>
+            <td>
+                <button style="float: right;width: 100%;text-align: center;height: 20rem;padding-top: 3rem;" id="next" onclick="next()">--></p></button>
+            </td>
+        </tr>
+    </table>
 </body>

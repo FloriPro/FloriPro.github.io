@@ -39,6 +39,7 @@ function getImg(now) {
     return imgs
 }
 loaded = 0;
+
 async function load(now, title, text, img) {
 
     title.innerText = now["title"];
@@ -152,7 +153,6 @@ async function get(i) {
             img = document.getElementById("img")
             load(now, title, text, img);
             //url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
-            get(0)
         }
         //show
         //document.getElementById("img").innerText=
@@ -206,12 +206,59 @@ function back() {
 
 type = "watching"
 
+function list() {
+    document.getElementById("buttons").style.display = "none";
+    i = 500
+    if (document.getElementById("Post") != null) { document.getElementById("Post").remove(); }
+    f(i);
+}
+async function f(i) {
+    url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
+    $.getJSON(url, function(json) {
+        after = json["data"]["after"];
+        j = json;
+        now = json["data"]["children"][0]["data"];
+
+        imgs = getImg(now)
+
+        document.getElementById("postSection").innerHTML += "<div id='post_" + i + "'></div>";
+
+
+
+        document.getElementById("post_" + i).innerHTML += "<p style='padding-bottom: 20%;'></p><h1 class='title'>" + now["title"] + "</h1>";
+        document.getElementById("post_" + i).innerHTML += "<div class='text'><p>" + selftext + "</p></div>";
+        if (now["selftext_html"] != null) { selftext = now["selftext_html"] } else { selftext = "" }
+        for (x in imgs) {
+            document.getElementById("post_" + i).innerHTML += "<img src='" + imgs[x] + "' width='100%' height='100%' alt='bild'></img>";;
+        }
+
+
+
+        //title = document.getElementById("post_" + i);
+        //text = document.getElementById("post_" + i);
+        //img = document.getElementById("post_" + i);
+
+
+
+        if (now["selftext_html"] != null) { selftext = now["selftext_html"] } else { selftext = "" }
+        text.innerHTML = selftext
+        img.innerHTML = ""
+        if (now["media"] != null) {
+            if ("oembed" in now["media"]) {
+                img.innerHTML += now["media"]["oembed"]["html"]
+            }
+        }
+        if (i >= 0) { f(i - 1); }
+    });
+}
+
 function change() {
     if (type == "watching") {
         document.getElementById("Post").style.display = "none";
         document.getElementById("buttons").style.display = "none";
         document.getElementById("change").innerText = "Fertig";
         document.getElementById("options").style.display = "unset";
+        document.getElementById("doAsList").style.display = "none";
         document.getElementById("showingType").value = sort_by;
         document.getElementById("community").value = subreddit;
         type = "changeing"
@@ -219,7 +266,8 @@ function change() {
         document.getElementById("Post").style.display = "unset";
         document.getElementById("buttons").style.display = "inline-table";
         document.getElementById("options").style.display = "none";
-        document.getElementById("change").innerText = "Verändern"
+        document.getElementById("doAsList").style.display = "unset";
+        document.getElementById("change").innerText = "Einstellungen"
         sort_byO = sort_by;
         sort_by = document.getElementById("showingType").value;
         subredditO = subreddit;
