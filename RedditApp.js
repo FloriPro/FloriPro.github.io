@@ -105,7 +105,7 @@ function videoPausePlayHandler(e) {
     }
 }
 
-function preloadImages(urls) {
+async function preloadImages(urls) {
     console.log(urls);
     var loadedCounter = 0;
     var toBeLoadedNumber = urls.length;
@@ -162,7 +162,8 @@ if (after == "") {
     get(2);
 }
 afterList = []
-async function next() {
+
+function next() {
     loaded = 0;
     i++;
     title = document.getElementById("title")
@@ -188,9 +189,9 @@ async function next() {
     window.scrollTo(0, 0);
 }
 
-async function back() {
-    afterO = afterList.at(-2);
-    after = afterList.at(-1);
+function back() {
+    afterO = afterList[afterList.length - 2];
+    after = afterList[afterList.length - 1];
     afterList.pop();
 
     let newUrlIS = window.location.origin + window.location.pathname + '?subreddit=' + subreddit + "&after=" + afterO;
