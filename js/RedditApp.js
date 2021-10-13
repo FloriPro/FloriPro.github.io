@@ -6,7 +6,7 @@ var limit = '1';
 var after = ""
 
 //load data
-const urlParams = new URLSearchParams(window.location.search);
+urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get("subreddit") != null) { subreddit = urlParams.get("subreddit"); }
 if (urlParams.get("after") != null) { after = urlParams.get("after"); }
 if (urlParams.get("sort") != null) { sort_by = urlParams.get("sort"); }
@@ -18,14 +18,12 @@ data = [];
 
 i = 0;
 
+
+
+
 function getImg(now) {
 
     var imgs = [];
-    //if ("preview" in now) {
-    //    for (x in now["preview"]["images"]) {
-    //        imgs.push(now["preview"]["images"][x]["source"]["url"]);
-    //    }
-    //}
     if ("media_metadata" in now) {
         for (x in now["media_metadata"]) {
             imgs.push(now["media_metadata"][x]["s"]["u"]);
@@ -285,3 +283,5 @@ function change() {
         }
     }
 }
+
+console.log("reddit JS Loaded");

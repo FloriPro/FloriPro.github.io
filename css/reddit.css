@@ -1,0 +1,36 @@
+h1 {
+    font-size: 30px;
+}
+
+p {
+    font-size: 20px;
+}
+
+button {
+    font-size: 100%;
+}
+
+select {
+    font-size: 200%;
+}
+
+input {
+    font-size: 100%;
+}
+
+
+/*.PostHidden {
+    display: none;
+}*/
+
+.changMeme {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: #ddd;
+    color: black;
+    border-radius: 5px;
+    text-decoration: none;
+    bottom: 5px;
+    right: 5px;
+}

@@ -8,6 +8,28 @@ $(document).on('click', 'a[href^="#"]', function(event) {
     fadeOut(el);
 });
 
+function loadJS(url, location) {
+    var scriptTag = document.createElement('script');
+    scriptTag.className = "external";
+    scriptTag.src = url;
+
+    location.appendChild(scriptTag);
+};
+
+function loadStyle(src) {
+    return new Promise(function(resolve, reject) {
+        let link = document.createElement('link');
+        link.href = src;
+        link.className = "external";
+        link.rel = 'stylesheet';
+
+        link.onload = () => resolve(link);
+        link.onerror = () => reject(new Error(`Style load error for ${src}`));
+
+        document.head.append(link);
+    });
+}
+
 function fadeOut(el) {
     var ele = document.getElementById(el);
     var blinkcooldown = 0;
@@ -98,35 +120,46 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
     //if (name == "/") { name = "Home"; }
     //name = name.replace("/", "").replace("/", "");
     var SubPageElements = json[name]
-    for (x in SubPageElements) {
-        SubPageElement = x;
+    if (json[name]["type"] == "text") {
+        for (x in SubPageElements) {
+            SubPageElement = x;
 
-        //generate "a"
-        addPageLink = document.createElement('a');
+            //generate "a"
+            addPageLink = document.createElement('a');
 
-        addPageLinkText = document.createTextNode(SubPageElement);
-        addPageLink.appendChild(addPageLinkText);
+            addPageLinkText = document.createTextNode(SubPageElement);
+            addPageLink.appendChild(addPageLinkText);
 
-        addPageLink.title = SubPageElement;
-        addPageLink.href = "#" + SubPageElement;
-        document.getElementsByClassName("topnav2")[0].appendChild(addPageLink);
+            addPageLink.title = SubPageElement;
+            addPageLink.href = "#" + SubPageElement;
+            document.getElementsByClassName("topnav2")[0].appendChild(addPageLink);
+        }
     }
+
+    removeElementsByClass("external");
 
     //Text/Headline for Page
     var t = document.getElementById("Text");
     var Text = json[name]
-    first = Object.keys(Text)[0]
-    if (Text[first].startsWith("!")) {
-        eval(Text[first].slice(1));
-    } else if (Text[first].startsWith("?")) {
-        t.innerHTML += Text[first].slice(1);
 
-    } else {
+    if (Text["type"] == "js") {
+        eval(Text["javascript"]);
+    } else if (Text["type"] == "html") {
+        t.innerHTML += Text["html"]
+        for (x in Text["javaScriptFiles"]) {
+            loadJS(Text["javaScriptFiles"][x], document.body)
+        }
+        for (x in Text["javaScriptFiles"]) {
+            loadStyle(window.location.origin + Text["stylesheetFiles"][x]);
+        }
+    } else if (Text["type"] == "text") {
         for (x in Text) {
+            if (x != "type") {
 
-            t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
-            t.innerHTML += '<p>' + Text[x] + "</p>";
-            t.innerHTML += '<p style="padding-bottom: 5%;"></p>';
+                t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
+                t.innerHTML += '<p>' + Text[x] + "</p>";
+                t.innerHTML += '<p style="padding-bottom: 5%;"></p>';
+            }
         }
     }
 }

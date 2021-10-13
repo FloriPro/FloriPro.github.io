@@ -1,10 +1,20 @@
 {
     "Home": {
+        "type": "text",
         "Allgemein": "Ich bin ein Typ der gerne unn�tige sachen macht(fast nicht's wird fertig...) und will diese hier gerne zeigen w�rde.",
         "News": "Ich mache nichts, also nichts LUL",
         "Spenden": "tue es einfach nicht... <h4>das ist es nicht wert.</h4>"
     },
     "Reddit": {
-        "Reddit": "!moveTo(\"/redditApp.html\")"
+        "type": "html",
+        "html": "<div id=\"postSection\">    <div id=\"Post\">        <h1 id=\"title\">Loading...</h1>        <div id=\"text\">Loading...</div>        <div id=\"img\"></div>    </div></div><button id=\"change\" style=\"font-size: 100%;\" onclick=\"change()\">Einstellungen</button><button id=\"doAsList\" style=\"font-size: 100%;\" onclick=\"list()\">Liste</button><div id=\"options\" style=\"display:none\"><br><br><select name=\"pets\" id=\"showingType\">        <option value=\"hot\">Heiß</option>        <option value=\"new\">Neu</option>        <option value=\"top\">Top</option>        <option value=\"rising\">Steigend</option>    </select>    <br>    <input type=\"text\" id=\"community\" value=\"None\"></div><p style=\"padding-bottom: 20rem;\"></p><table style=\"width: 100%; display: inline-table;\" class=\"changMeme\" id=\"buttons\">    <tr>        <td><button style=\"float: right;width: 100%;text-align: center;height: 150%;\" id=\"back\" onclick=\"back()\"><br><--</button></td>        <td><button style=\"float: right;width: 100%;text-align: center;height: 150%;\" id=\"next\" onclick=\"next()\"><br>--></button></td>    </tr></table>",
+        "javaScriptFiles": [
+            "/js/RedditApp.js"
+        ],
+        "stylesheetFiles": ["/css/reddit.css"]
+    },
+    "jsTest": {
+        "type": "js",
+        "javascript": "console.log(\"moin\");"
     }
 }
