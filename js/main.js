@@ -7,6 +7,7 @@ $(document).on('click', 'a[href^="#"]', function(event) {
     }, 500);
     fadeOut(el);
 });
+urlParams = new URLSearchParams(window.location.search);
 
 function loadJS(url, location) {
     var scriptTag = document.createElement('script');
@@ -71,7 +72,11 @@ function getCookie(name) {
 
 
 window.addEventListener('load', function() {
-    if (window.location.search == "") { loadNavBarAndMore("Home") } else { loadNavBarAndMore(window.location.search.slice(1)); }
+    if (urlParams.get("page") == null) {
+        loadNavBarAndMore("Home")
+    } else {
+        loadNavBarAndMore(urlParams.get("page"));
+    }
 })
 
 
@@ -122,17 +127,19 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
     var SubPageElements = json[name]
     if (json[name]["type"] == "text") {
         for (x in SubPageElements) {
-            SubPageElement = x;
+            if (x != "type") {
+                SubPageElement = x;
 
-            //generate "a"
-            addPageLink = document.createElement('a');
+                //generate "a"
+                addPageLink = document.createElement('a');
 
-            addPageLinkText = document.createTextNode(SubPageElement);
-            addPageLink.appendChild(addPageLinkText);
+                addPageLinkText = document.createTextNode(SubPageElement);
+                addPageLink.appendChild(addPageLinkText);
 
-            addPageLink.title = SubPageElement;
-            addPageLink.href = "#" + SubPageElement;
-            document.getElementsByClassName("topnav2")[0].appendChild(addPageLink);
+                addPageLink.title = SubPageElement;
+                addPageLink.href = "#" + SubPageElement;
+                document.getElementsByClassName("topnav2")[0].appendChild(addPageLink);
+            }
         }
     }
 
@@ -141,6 +148,7 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
     //Text/Headline for Page
     var t = document.getElementById("Text");
     var Text = json[name]
+
 
     if (Text["type"] == "js") {
         eval(Text["javascript"]);
@@ -179,8 +187,10 @@ function loadNavBarAndMore(pageName) {
     }
 
     //change url
-    let newUrlIS = window.location.origin + '/?' + pageName;
-    history.pushState({}, null, newUrlIS);
+    if (urlParams.get("page") != pageName) {
+        let newUrlIS = window.location.origin + '/?page=' + pageName;
+        history.pushState({}, null, newUrlIS);
+    }
 }
 
 

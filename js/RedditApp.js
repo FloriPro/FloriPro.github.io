@@ -172,8 +172,7 @@ function next() {
     img = document.getElementById("img")
 
     //set "subreddit" and after
-    let newUrlIS = window.location.origin + window.location.pathname + '?subreddit=' + subreddit + "&after=" + afterO + "&sort=" + sort_by;
-    history.pushState({}, null, newUrlIS);
+    setLoc(subreddit, afterO, sort_by)
 
     //back
     afterList.push(afterO);
@@ -187,7 +186,14 @@ function next() {
     afterO = after
     get(0)
 
-    window.scrollTo(0, 0);
+    document.querySelector('#title').scrollIntoView({
+        behavior: 'smooth'
+    });
+}
+
+function setLoc(subredd, aft, sort_) {
+    let newUrlIS = window.location.origin + window.location.pathname + '?page=' + urlParams.get("page") + '&subreddit=' + subredd + "&after=" + aft + "&sort=" + sort_;
+    history.pushState({}, null, newUrlIS);
 }
 
 function back() {
@@ -195,8 +201,7 @@ function back() {
     after = afterList[afterList.length - 1];
     afterList.pop();
 
-    let newUrlIS = window.location.origin + window.location.pathname + '?subreddit=' + subreddit + "&after=" + afterO + "&sort=" + sort_by;
-    history.pushState({}, null, newUrlIS);
+    setLoc(subreddit, afterO, sort_by)
 
     url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + afterO;
     get(1);
