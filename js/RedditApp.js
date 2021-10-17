@@ -1,16 +1,39 @@
-var subreddit = 'Minecraft';
-var sort_by = 'new';
+var subreddit = 'memes';
+var sort_by = 'hot';
 var sort_time = 'all';
 var save_dir = 'default';
 var limit = '1';
 var after = ""
+var saveData = false;
+
+
+video_audio = null
+video_video = null
 
 //load data
 urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get("subreddit") != null) { subreddit = urlParams.get("subreddit"); }
-if (urlParams.get("after") != null) { after = urlParams.get("after"); }
-if (urlParams.get("sort") != null) { sort_by = urlParams.get("sort"); }
+if (urlParams.get("subreddit") != null) {
+    subreddit = urlParams.get("subreddit");
+} else {
+    su = getCookie("RedditSubreddit");
+    if (su != null) {
+        subreddit = su;
+    }
+}
 
+if (urlParams.get("sort") != null) {
+    sort_by = urlParams.get("sort");
+} else {
+    so = getCookie("RedditSort");
+    if (so != null) {
+        sort_by = so;
+    }
+}
+
+
+if (urlParams.get("after") != null) {
+    after = urlParams.get("after");
+}
 url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
 
 var afterList = [];
@@ -18,6 +41,33 @@ data = [];
 
 i = 0;
 
+function getCookie(name) {
+    var dc,
+        prefix,
+        begin,
+        end;
+    dc = document.cookie;
+    prefix = name + "=";
+    begin = dc.indexOf("; " + prefix);
+    end = dc.length;
+    if (begin !== -1) {
+        begin += 2;
+    } else {
+        begin = dc.indexOf(prefix);
+        if (begin === -1 || begin !== 0) return null;
+    }
+    if (dc.indexOf(";", begin) !== -1) {
+        end = dc.indexOf(";", begin);
+    }
+    return decodeURI(dc.substring(begin + prefix.length, end)).replace(/\"/g, '');
+}
+
+function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
 
 
 
@@ -26,10 +76,25 @@ function getImg(now) {
     var imgs = [];
     if ("media_metadata" in now) {
         for (x in now["media_metadata"]) {
-            imgs.push(now["media_metadata"][x]["s"]["u"]);
+            if (saveData == false) {
+                imgs.push(now["media_metadata"][x]["s"]["u"]);
+            } else {
+                p = Math.round(now["media_metadata"][x]["p"].length / 4);
+                //p = 4;
+                console.log("id: " + p + ", size: x:" + now["media_metadata"][x]["p"][p]["x"] + ", y:" + now["media_metadata"][x]["p"][p]["y"]);
+                imgs.push(now["media_metadata"][x]["p"][p]["u"]);
+            }
         }
     }
-    if ("url" in now) {
+    if ("preview" in now && saveData == true) {
+        console.log(now)
+        for (x in now["preview"]["images"]) {
+            a = now["preview"]["images"][x]["resolutions"];
+            p = Math.round(a.length / 4);
+
+            imgs.push(a[p]["url"]);
+        }
+    } else if ("url" in now) {
         if (!now["url"].match(/.(jpg|jpeg|png|gif)$/i)) {} else {
             imgs.push(now["url"]);
         }
@@ -39,7 +104,6 @@ function getImg(now) {
 loaded = 0;
 
 async function load(now, title, text, img) {
-
     title.innerText = now["title"];
     link = "https://reddit.com" + now["permalink"]
     if (now["selftext_html"] != null) { selftext = now["selftext_html"] } else { selftext = "" }
@@ -56,7 +120,7 @@ async function load(now, title, text, img) {
             audio = audio.substring(0, audio.indexOf('DASH'));
             audio = audio + "DASH_audio.mp4?source=fallback";
             img.innerHTML += "<video id='video_video' controls width='100%' height='100%' alt='loading...'><source src='" + now["media"]["reddit_video"]["fallback_url"] + "'></video>";
-            img.innerHTML += "<audio id='video_audio' controls width='0%' height='0%' alt='loading...'><source src='" + audio + "'></audio>";
+            img.innerHTML += "<audio id='video_audio' controls width='0%' height='0%' alt='loading...' playsinline=\"\" autoplay=\"\" muted=\"\"><source src='" + audio + "'></audio>";
 
             video_audio = document.getElementById("video_audio");
             video_video = document.getElementById("video_video");
@@ -65,9 +129,9 @@ async function load(now, title, text, img) {
             video_video.addEventListener('loadeddata', function() {
                 loaded += 1;
                 if (loaded == 2) {
-                    video_video.play();
-                    video_video.addEventListener('play', videoPausePlayHandler, false);
+                    video_audio.muted = false;
                     video_video.addEventListener('pause', videoPausePlayHandler, false);
+                    video_video.addEventListener('play', videoPausePlayHandler, false);
                     video_video.addEventListener('seeking', videoPausePlayHandler, false);
                     video_video.addEventListener('waiting', videoPausePlayHandler, false);
                     video_video.addEventListener('canplay', videoPausePlayHandler, false);
@@ -76,9 +140,9 @@ async function load(now, title, text, img) {
             video_audio.addEventListener('loadeddata', function() {
                 loaded += 1;
                 if (loaded == 2) {
-                    video_video.play();
-                    video_video.addEventListener('play', videoPausePlayHandler, false);
+                    video_audio.muted = false;
                     video_video.addEventListener('pause', videoPausePlayHandler, false);
+                    video_video.addEventListener('play', videoPausePlayHandler, false);
                     video_video.addEventListener('seeking', videoPausePlayHandler, false);
                     video_video.addEventListener('waiting', videoPausePlayHandler, false);
                     video_video.addEventListener('canplay', videoPausePlayHandler, false);
@@ -108,13 +172,11 @@ function videoPausePlayHandler(e) {
 }
 
 async function preloadImages(urls) {
-    console.log(urls);
     var loadedCounter = 0;
     var toBeLoadedNumber = urls.length;
     urls.forEach(function(url) {
         preloadImage(url, function() {
             loadedCounter++;
-            console.log('Number of loaded images: ' + loadedCounter);
         });
     });
 
@@ -156,6 +218,7 @@ async function get(i) {
         //document.getElementById("img").innerText=
     });
 }
+
 if (after == "") {
     get(1)
 } else {
@@ -165,6 +228,14 @@ if (after == "") {
 afterList = []
 
 function next() {
+    if (video_video != null) {
+        video_video.remove()
+        video_audio.remove()
+
+        video_audio = null
+        video_video = null
+
+    }
     loaded = 0;
     i++;
     title = document.getElementById("title")
@@ -213,9 +284,9 @@ function list() {
     document.getElementById("buttons").style.display = "none";
     i = 500
     if (document.getElementById("Post") != null) { document.getElementById("Post").remove(); }
-    f(i);
+    listLoadFunction(i);
 }
-async function f(i) {
+async function listLoadFunction(i) {
     url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
     $.getJSON(url, function(json) {
         after = json["data"]["after"];
@@ -251,9 +322,17 @@ async function f(i) {
                 img.innerHTML += now["media"]["oembed"]["html"]
             }
         }
-        if (i >= 0) { f(i - 1); }
+        if (i >= 0) { listLoadFunction(i - 1); }
     });
 }
+
+
+function updated() {
+    setCookie("RedditSubreddit", subreddit, 365);
+    setCookie("RedditSort", sort_by, 365);
+}
+
+updated()
 
 function change() {
     if (type == "watching") {
@@ -275,16 +354,21 @@ function change() {
         sort_by = document.getElementById("showingType").value;
         subredditO = subreddit;
         subreddit = document.getElementById("community").value;
+        saveData = document.getElementById("dataSave").checked;
+
+
         type = "watching";
         if (sort_byO != sort_by) {
             after = "";
             url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
             get(1);
+            updated()
         }
         if (subredditO != subreddit) {
             after = "";
             url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
             get(1);
+            updated()
         }
     }
 }
