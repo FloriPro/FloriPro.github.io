@@ -81,7 +81,6 @@ function getImg(now) {
             } else {
                 p = Math.round(now["media_metadata"][x]["p"].length / 4);
                 //p = 4;
-                console.log("id: " + p + ", size: x:" + now["media_metadata"][x]["p"][p]["x"] + ", y:" + now["media_metadata"][x]["p"][p]["y"]);
                 imgs.push(now["media_metadata"][x]["p"][p]["u"]);
             }
         }

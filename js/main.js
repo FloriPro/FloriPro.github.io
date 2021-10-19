@@ -1,5 +1,5 @@
 //smooth movement
-$(document).on('click', 'a[href^="#"]', function(event) {
+$(document).on('click', 'a[href^="#"]', function (event) {
     var el = $.attr(this, 'href').replace("#", "");
     event.preventDefault();
     $('html, body').animate({
@@ -18,7 +18,7 @@ function loadJS(url, location) {
 };
 
 function loadStyle(src) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         let link = document.createElement('link');
         link.href = src;
         link.className = "external";
@@ -35,7 +35,7 @@ function fadeOut(el) {
     var ele = document.getElementById(el);
     var blinkcooldown = 0;
 
-    var blinkWait = setInterval(function() {
+    var blinkWait = setInterval(function () {
         blinkcooldown += 1;
         if (blinkcooldown == 1) {
             ele.style.backgroundColor = "rgb(0, 120, 215)"; //0078d7
@@ -71,7 +71,7 @@ function getCookie(name) {
 
 
 
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     if (urlParams.get("page") == null) {
         loadNavBarAndMore("Home")
     } else {
@@ -160,13 +160,18 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
         for (x in Text["javaScriptFiles"]) {
             loadStyle(window.location.origin + Text["stylesheetFiles"][x]);
         }
-    } else if (Text["type"] == "text") {
+    } else if (Text["type"] == "text" || Text["type"] == "multiHtml") {
         for (x in Text) {
             if (x != "type") {
-
-                t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
-                t.innerHTML += '<p>' + Text[x] + "</p>";
-                t.innerHTML += '<p style="padding-bottom: 5%;"></p>';
+                if (Text["type"] != "multiHtml") {
+                    t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
+                    t.innerHTML += '<p>' + Text[x] + "</p>";
+                    t.innerHTML += '<p style="padding-bottom: 5%;"></p>';
+                }else{
+                    t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
+                    t.innerHTML += Text[x]
+                    t.innerHTML += '<p style="padding-bottom: 5%;"></p>';
+                }
             }
         }
     }
@@ -176,7 +181,7 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
 function loadNavBarAndMore(pageName) {
     document.title = "FloriPro | " + pageName;
     if (localStorage["jsonData"] == undefined || true) {
-        $.getJSON("/navigation.json", function(json) {
+        $.getJSON("/navigation.json", function (json) {
             loadNavBarAndMoreJsonInput(json, pageName);
             console.log("Saving");
             localStorage.setItem('jsonData', JSON.stringify(json));

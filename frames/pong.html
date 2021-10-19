@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <title>FloriPro</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        canvas {
+            background: rgb(0, 0, 0);
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+
+</head>
+
+<body id="body">
+    <br>
+    <canvas id="canvasOfDoom" width="480" height="320"></canvas>
+
+    <script>
+        function drawRect(posx, posy, width, height, color) {
+            ctx.beginPath();
+            ctx.rect(posx, posy, width, height);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.closePath();
+        }
+        function drawCircle(posx, posy, radius, color) {
+            ctx.beginPath();
+            ctx.arc(posx, posy, radius, 0, 2 * Math.PI, false);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.closePath();
+        }
+        function fill(color) {
+            ctx.fillStyle = color;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function move(x, y, rot, mult) {
+            y += mult * Math.sin(rot/360*Math.PI);
+            x += mult * Math.cos(rot/360*Math.PI);
+
+            return [x, y]
+        }
+
+        var pressedKeys = {};
+        window.onkeyup = function (e) { pressedKeys[e.key] = false; }
+        window.onkeydown = function (e) { pressedKeys[e.key] = true; }
+
+        var canvas = document.getElementById("canvasOfDoom");
+        var ctx = canvas.getContext("2d");
+
+
+        var middleX = canvas.width / 2;
+        var middleY = canvas.height / 2;
+
+        var BallSpeed = 2;
+        var BallX = middleX;
+        var BallY = middleY;
+        var BallRot = 40;
+
+        var paddleSpeed = 5;
+        var paddleL = 0;
+        var paddleR = 0;
+
+        function draw() {
+            //keyboard input
+            if (pressedKeys["ArrowUp"]) {
+                paddleR -= paddleSpeed;
+            }
+            if (pressedKeys["w"]) {
+                paddleL -= paddleSpeed;
+            }
+            if (pressedKeys["ArrowDown"]) {
+                paddleR += paddleSpeed;
+            }
+            if (pressedKeys["s"]) {
+                paddleL += paddleSpeed;
+            }
+
+
+            //move ball
+            [BallX, BallY] = move(BallX, BallY, BallRot, BallSpeed);
+            if (BallX>=canvas.width - 20){
+                BallRot=360-BallRot;
+                BallX=canvas.width-21;
+            }
+            if (BallX<=20){
+                BallRot=360-BallRot;
+                BallX=21;
+            }if (BallY>=canvas.height-20){
+                console.log("moin");
+                BallRot=BallRot-(BallRot+360);
+                BallY=canvas.height-50;
+            }
+
+            //draw
+            fill("#000000")
+            drawRect(10, paddleL, 10, 50, "#ffffff");
+            drawRect(canvas.width - 20, paddleR, 10, 50, "#ffffff");
+            drawCircle(BallX, BallY, 10, "#ffffff");
+
+
+        }
+        setInterval(draw, 10);
+    </script>
+</body>

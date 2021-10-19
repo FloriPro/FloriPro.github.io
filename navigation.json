@@ -11,10 +11,13 @@
         "javaScriptFiles": [
             "/js/RedditApp.js"
         ],
-        "stylesheetFiles": ["/css/reddit.css"]
+        "stylesheetFiles": [
+            "/css/reddit.css"
+        ]
     },
-    "jsTest": {
-        "type": "js",
-        "javascript": "console.log(\"moin\");"
+    "Games": {
+        "type":"multiHtml",
+        "Pong":"<iframe src=\"/frames/pong.html\"></iframe>",
+        "unknown":"<p>unknown</p>"
     }
 }
