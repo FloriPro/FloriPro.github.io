@@ -11,7 +11,7 @@
             padding: 0;
             margin: 0;
         }
-
+        
         canvas {
             background: rgb(0, 0, 0);
             display: block;
@@ -33,6 +33,7 @@
             ctx.fill();
             ctx.closePath();
         }
+
         function drawCircle(posx, posy, radius, color) {
             ctx.beginPath();
             ctx.arc(posx, posy, radius, 0, 2 * Math.PI, false);
@@ -40,21 +41,48 @@
             ctx.fill();
             ctx.closePath();
         }
+
         function fill(color) {
             ctx.fillStyle = color;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
         function move(x, y, rot, mult) {
-            y += mult * Math.sin(rot/360*Math.PI);
-            x += mult * Math.cos(rot/360*Math.PI);
+            y += mult * Math.sin(rot / 180 * Math.PI);
+            x += mult * Math.cos(rot / 180 * Math.PI);
 
             return [x, y]
         }
 
+        function normalize(degrees) {
+            var normalized = degrees;
+            if (normalized > 360) {
+                while (normalized > 360) {
+                    normalized -= 360;
+                }
+            }
+            if (normalized < 0) {
+                while (normalized < 0) {
+                    normalized += 360;
+                }
+            }
+            return normalized;
+        }
+
+        function Random(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+
         var pressedKeys = {};
-        window.onkeyup = function (e) { pressedKeys[e.key] = false; }
-        window.onkeydown = function (e) { pressedKeys[e.key] = true; }
+        window.onkeyup = function(e) {
+            pressedKeys[e.key] = false;
+        }
+        window.onkeydown = function(e) {
+            pressedKeys[e.key] = true;
+        }
 
         var canvas = document.getElementById("canvasOfDoom");
         var ctx = canvas.getContext("2d");
@@ -63,10 +91,11 @@
         var middleX = canvas.width / 2;
         var middleY = canvas.height / 2;
 
+        var BallBounceRandomnessDegrees = 30;
         var BallSpeed = 2;
         var BallX = middleX;
-        var BallY = middleY;
-        var BallRot = 40;
+        var BallY = 250;
+        var BallRot = 160;
 
         var paddleSpeed = 5;
         var paddleL = 0;
@@ -90,18 +119,26 @@
 
             //move ball
             [BallX, BallY] = move(BallX, BallY, BallRot, BallSpeed);
-            if (BallX>=canvas.width - 20){
-                BallRot=360-BallRot;
-                BallX=canvas.width-21;
+            //BallRot = normalize(BallRot);
+            if (BallX >= canvas.width - 20) {
+                BallRot = -BallRot - 180
+                BallX = canvas.width - 21;
             }
-            if (BallX<=20){
-                BallRot=360-BallRot;
-                BallX=21;
-            }if (BallY>=canvas.height-20){
-                console.log("moin");
-                BallRot=BallRot-(BallRot+360);
-                BallY=canvas.height-50;
+            if (BallX <= 20) {
+                BallRot = -BallRot - 180
+                BallX = 21;
             }
+            if (BallY >= canvas.height - 10) {
+                BallRot = BallRot * -1
+                BallY = canvas.height - 11;
+            }
+            if (BallY <= 10) {
+                BallRot = BallRot * -1
+                BallY = 11;
+            }
+
+
+            BallRot = normalize(BallRot);
 
             //draw
             fill("#000000")
