@@ -1,11 +1,11 @@
 //smooth movement
-$(document).on('click', 'a[href^="#"]', function (event) {
+$(document).on('click', 'a[href^="#"]', function(event) {
     var el = $.attr(this, 'href').replace("#", "");
     event.preventDefault();
     $('html, body').animate({
         scrollTop: $($.attr(this, 'href')).offset().top
     }, 500);
-    fadeOut(el);
+    if (el != "top") { fadeOut(el); }
 });
 urlParams = new URLSearchParams(window.location.search);
 
@@ -18,7 +18,7 @@ function loadJS(url, location) {
 };
 
 function loadStyle(src) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
         let link = document.createElement('link');
         link.href = src;
         link.className = "external";
@@ -35,7 +35,7 @@ function fadeOut(el) {
     var ele = document.getElementById(el);
     var blinkcooldown = 0;
 
-    var blinkWait = setInterval(function () {
+    var blinkWait = setInterval(function() {
         blinkcooldown += 1;
         if (blinkcooldown == 1) {
             ele.style.backgroundColor = "rgb(0, 120, 215)"; //0078d7
@@ -71,7 +71,7 @@ function getCookie(name) {
 
 
 
-window.addEventListener('load', function () {
+window.addEventListener('load', function() {
     if (urlParams.get("page") == null) {
         loadNavBarAndMore("Home")
     } else {
@@ -125,9 +125,9 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
     //if (name == "/") { name = "Home"; }
     //name = name.replace("/", "").replace("/", "");
     var SubPageElements = json[name]
-    if (json[name]["type"] == "text") {
+    if (json[name]["type"] == "text" || json[name]["type"] == "multiHtml") {
         for (x in SubPageElements) {
-            if (x != "type") {
+            if (x != "type" && x != "js") {
                 SubPageElement = x;
 
                 //generate "a"
@@ -167,10 +167,15 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
                     t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
                     t.innerHTML += '<p>' + Text[x] + "</p>";
                     t.innerHTML += '<p style="padding-bottom: 5%;"></p>';
-                }else{
-                    t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
-                    t.innerHTML += Text[x]
-                    t.innerHTML += '<p style="padding-bottom: 5%;"></p>';
+                } else {
+                    if (x != "js") {
+                        t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
+                        t.innerHTML += Text[x]
+                        t.innerHTML += '<p style="padding-bottom: 5%;"></p>';
+                    }
+                    if (x == "js") {
+                        eval(Text["js"]);
+                    }
                 }
             }
         }
@@ -180,8 +185,8 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
 
 function loadNavBarAndMore(pageName) {
     document.title = "FloriPro | " + pageName;
-    if (localStorage["jsonData"] == undefined || true) {
-        $.getJSON("/navigation.json", function (json) {
+    if (localStorage["jsonData"] == undefined) {
+        $.getJSON("/navigation.json", function(json) {
             loadNavBarAndMoreJsonInput(json, pageName);
             console.log("Saving");
             localStorage.setItem('jsonData', JSON.stringify(json));
