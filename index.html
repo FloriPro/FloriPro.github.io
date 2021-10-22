@@ -12,7 +12,8 @@
 
 <body id="body">
 
-    <div class="alert" style="display: none; margin-top: -68px;"><span class="closebtn" onclick="moveAwayEffect()">�</span>Herzlich wilkommen, auf meiner Seite. Du wirst hier leider nichts Finden, da es nichts gibt... RIP<br></div>
+
+    <div class="alert" style="display: none; margin-top: -68px;"><span class="closebtn" onclick="moveAwayEffect()">X    </span>Herzlich wilkommen, auf meiner Seite. Du wirst hier leider nichts Finden, da es nichts gibt... RIP<br></div>
 
     <div class="CookieAccept" id="CookieAccept" style="display: none; opacity: 0;">
         <h2>Cookies</h2>
@@ -44,8 +45,33 @@
         </footer>
         <a href="#top" class="UpButton" style="font-size: 30px;">Up</a>
     </div>
-
-
-
+    <div class="unselectable" id="rightClickMenu" style="display:none;" onmouseover="mouseStatus(true);" onmouseout="mouseStatus(false);">
+        <table class="mouseOverBackgoundGray">
+            <tr onclick="copyTextToClipboard();" id="copyTextToClipboard">
+                <th>
+                    <p>Kopieren</p>
+                </th>
+                <th>
+                    <p>Strg + C</p>
+                </th>
+            </tr>
+            <tr onclick="delData()">
+                <th>
+                    <p>Neuladen</p>
+                </th>
+                <th>
+                    <p>Strg + R</p>
+                </th>
+            </tr>
+            <tr onclick="back()">
+                <th>
+                    <p>Zurück</p>
+                </th>
+                <th>
+                    <p>Alt + Linkspfeil</p>
+                </th>
+            </tr>
+        </table>
+    </div>
 
 </body>

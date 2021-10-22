@@ -102,20 +102,22 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
     //Pages
     var pages = json;
     for (x in pages) {
-        page = x;
-        pageLink = page;
+        if (x != "404") {
+            page = x;
+            pageLink = page;
 
-        //generate "a"
-        addPageLink = document.createElement('a');
+            //generate "a"
+            addPageLink = document.createElement('a');
 
-        addPageLinkText = document.createTextNode(page);
-        addPageLink.appendChild(addPageLinkText);
+            addPageLinkText = document.createTextNode(page);
+            addPageLink.appendChild(addPageLinkText);
 
-        addPageLink.title = page;
-        addPageLink.href = "javascript:changePage('" + pageLink + "')";
-        document.getElementsByClassName("topnav")[0].appendChild(addPageLink);
+            addPageLink.title = page;
+            addPageLink.href = "javascript:changePage('" + pageLink + "')";
+            document.getElementsByClassName("topnav")[0].appendChild(addPageLink);
 
-        //<a href="/">Home</a>
+            //<a href="/">Home</a>
+        }
     }
 
 
@@ -220,4 +222,96 @@ function delData() {
 function moveTo(link) {
     console.log(link)
     window.location = link;
+}
+
+var mouseX = 0;
+var mouseY = 0;
+onmousemove = function(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+}
+
+if (document.addEventListener) {
+    document.addEventListener('contextmenu', function(e) {
+        openMenu();
+        e.preventDefault();
+    }, false);
+} else {
+    document.attachEvent('oncontextmenu', function() {
+        openMenu();
+        window.event.returnValue = false;
+    });
+}
+$(document).bind("mousedown", function(event) {
+    if (!mouseOnDropdown) {
+        document.getElementById("rightClickMenu").style.display = "none";
+    }
+});
+$(document).bind("click", function(event) {
+    document.getElementById("rightClickMenu").style.display = "none";
+});
+
+function foo() {}
+
+
+//functions
+function copyTextToClipboard() {
+    document.getElementById("rightClickMenu").style.display = "none";
+    if (linkImg != "") {
+        console.log("copy");
+        copyElementToClipboard(linkImg);
+        linkImg = "";
+    } else if (exactText != "" || linkText != "") {
+        if (linkText != "") {
+            exactText = linkText;
+            linkText = "";
+        }
+        navigator.clipboard.writeText(exactText).then(function() {
+            console.log('Async: Copying to clipboard was successful!');
+        }, function(err) {
+            console.error('Async: Could not copy text: ', err);
+        });
+    }
+}
+
+function copyElementToClipboard(element) {
+    window.getSelection().removeAllRanges();
+    let range = document.createRange();
+    range.selectNode(typeof element === 'string' ? document.getElementById(elementName) : element);
+    window.getSelection().addRange(range);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+}
+
+
+var exactText = "";
+var linkText = "";
+var linkImg = "";
+document.addEventListener('mouseup', event => {
+    exactText = window.getSelection().toString();
+});
+
+var mouseOnDropdown = false;
+
+function mouseStatus(n) {
+    mouseOnDropdown = n;
+}
+
+function openMenu() {
+    document.getElementById("rightClickMenu").style.top = mouseY + "px";
+    document.getElementById("rightClickMenu").style.left = mouseX + "px";
+    document.getElementById("rightClickMenu").style.display = "unset";
+    if (exactText == "" && $("a:hover").length == 0 && $("img:hover").length == 0) { document.getElementById("copyTextToClipboard").style.display = "none"; } else { document.getElementById("copyTextToClipboard").style.display = ""; }
+
+    if ($("a:hover").length != 0) {
+        linkText = $("a:hover")[0].href;
+    }
+    if ($("img:hover").length != 0) {
+        linkImg = $("img:hover")[0];
+    }
+}
+
+function back() {
+    location.reload();
+    history.back();
 }
