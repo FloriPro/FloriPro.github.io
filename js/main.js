@@ -77,6 +77,11 @@ window.addEventListener('load', function() {
     } else {
         loadNavBarAndMore(urlParams.get("page"));
     }
+    if (location.hash != "") {
+        $('html, body').animate({
+            scrollTop: $(location.hash).offset().top
+        }, 500);
+    }
 })
 
 
