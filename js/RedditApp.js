@@ -94,6 +94,7 @@ function getImg(now) {
             imgs.push(a[p]["url"]);
         }
     } else if ("url" in now) {
+        now["url"] = now["url"].replace("gifv", "jpg")
         if (!now["url"].match(/.(jpg|jpeg|png|gif)$/i)) {} else {
             imgs.push(now["url"]);
         }
@@ -153,7 +154,7 @@ async function load(now, title, text, img) {
     g = getImg(now);
 
     for (x in g) {
-        img.innerHTML += "<img src='" + g[x] + "' width='100%' height='100%'></img>";
+        img.innerHTML += "<img src='" + g[x] + "' width='100%' height='100%' alt='Bild(kann nicht angezeigt werden, wenn du das hier siehst)'></img>";
     }
 }
 

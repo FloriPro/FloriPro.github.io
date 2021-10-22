@@ -32,7 +32,9 @@ a:visited {
 table {
     background-color: white;
     border-collapse: collapse;
-    width: 200%;
+    width: 120%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px rgb(255, 255, 255);
 }
 
 #rightClickMenu {

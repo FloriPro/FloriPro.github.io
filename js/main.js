@@ -188,7 +188,9 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
 function loadNavBarAndMore(pageName) {
     document.title = "FloriPro | " + pageName;
     if (localStorage["jsonData"] == undefined) {
-        $.getJSON("/navigation.json", function(json) {
+        var ts = new Date().getTime();
+        var data = { _: ts };
+        $.getJSON("/navigation.json", data, function(json) {
             loadNavBarAndMoreJsonInput(json, pageName);
             console.log("Saving");
             localStorage.setItem('jsonData', JSON.stringify(json));
@@ -216,7 +218,7 @@ function clearBoxClass(elementClass) {
 
 function delData() {
     localStorage.removeItem("jsonData");
-    location.reload();
+    location.reload(true);
 }
 
 function moveTo(link) {
@@ -254,6 +256,14 @@ $(document).bind("click", function(event) {
 function foo() {}
 
 
+function copy(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        console.log('Async: Copying to clipboard was successful!');
+    }, function(err) {
+        console.error('Async: Could not copy text: ', err);
+    });
+}
+
 //functions
 function copyTextToClipboard() {
     document.getElementById("rightClickMenu").style.display = "none";
@@ -266,23 +276,70 @@ function copyTextToClipboard() {
             exactText = linkText;
             linkText = "";
         }
-        navigator.clipboard.writeText(exactText).then(function() {
-            console.log('Async: Copying to clipboard was successful!');
-        }, function(err) {
-            console.error('Async: Could not copy text: ', err);
-        });
+        copy(exactText);
+
     }
 }
 
-function copyElementToClipboard(element) {
-    window.getSelection().removeAllRanges();
-    let range = document.createRange();
-    range.selectNode(typeof element === 'string' ? document.getElementById(elementName) : element);
+function openLinkInNewTab() {
+    if (linkText.startsWith("javascript:changePage('")) {
+        window.open(location.origin + "/?page=" + linkText.replace("javascript:changePage('", "").replace("')", ""), '_blank').focus();
+    } else {
+        window.open(linkText, '_blank').focus();
+    }
+}
+
+function selectAll() {
+    var sel = window.getSelection();
+    var body = document.querySelector("body");
+    // Place the children in an array so that we can use the filter method
+    var children = Array.prototype.slice.call(body.children);
+
+    // Create the selectable div
+    var selectable = document.createElement("div");
+
+    // Style the selectable div so that it doesn't break the flow of a website.
+
+    selectable.style.width = '100%';
+    selectable.style.height = '100%';
+    selectable.margin = 0;
+    selectable.padding = 0;
+    selectable.position = 'absolute';
+
+    // Add the selectable element to the body
+    body.appendChild(selectable);
+
+    // Filter the children so that we only move what we want to select.
+    children = children.filter(function(e) {
+        var s = getComputedStyle(e);
+        return s.getPropertyValue('user-select') != 'none' && e.tagName != 'SCRIPT'
+    });
+    // Add each child to the selectable div
+    for (var i = 0; i < children.length; i++) {
+        selectable.appendChild(children[i]);
+    }
+
+    // Select the children of the selectable div
+    sel.selectAllChildren(selectable);
+
+}
+
+
+async function copyElementToClipboard(element) {
+    var imageElem = element;
+    var range = document.createRange();
+    range.selectNode(imageElem);
     window.getSelection().addRange(range);
-    document.execCommand('copy');
+    try { var successful = document.execCommand('copy'); var msg = successful ? 'successful' : 'unsuccessful'; } catch (err) { console.log('Oops, unable to copy'); }
     window.getSelection().removeAllRanges();
 }
 
+function copyLinkToClipboard() {
+    if (linkText != "") {
+        copy(linkText)
+        linkText = ""
+    }
+}
 
 var exactText = "";
 var linkText = "";
@@ -305,13 +362,15 @@ function openMenu() {
 
     if ($("a:hover").length != 0) {
         linkText = $("a:hover")[0].href;
-    }
+        document.getElementById("openLinkInNewTab").style.display = "";
+    } else { document.getElementById("openLinkInNewTab").style.display = "none"; }
     if ($("img:hover").length != 0) {
         linkImg = $("img:hover")[0];
     }
 }
 
 function back() {
-    location.reload();
     history.back();
+    setTimeout(foo, 200);
+    if (urlParams.get("page") != null) { loadNavBarAndMore(urlParams.get("page")); }
 }
