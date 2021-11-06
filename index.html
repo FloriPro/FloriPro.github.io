@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/main.css">
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="/js/main.js"></script>
     <script src="/js/cookie.js"></script>
+    <script src="/js/main.js"></script>
     <title>FloriPro</title>
 </head>
 
 <body id="body">
 
 
-    <div class="alert" style="display: none; margin-top: -68px;"><span class="closebtn" onclick="moveAwayEffect()">X    </span>Herzlich wilkommen, auf meiner Seite. Du wirst hier leider nichts Finden, da es nichts gibt... RIP<br></div>
+    <div class="alert" style="display: none; margin-top: -68px;"><span class="closebtn" onclick="moveAwayEffect()">X
+        </span>Herzlich wilkommen, auf meiner Seite. Du wirst hier leider nichts Finden, da es nichts gibt... RIP<br>
+    </div>
 
     <div class="CookieAccept" id="CookieAccept" style="display: none; opacity: 0;">
         <h2>Cookies</h2>
@@ -29,13 +31,10 @@
         <div class="topnav">
         </div>
 
-
         <div class="topnav2" id="topnav2">
         </div>
 
         <br>
-
-
 
         <div id="Text">
         </div>
@@ -45,7 +44,8 @@
         </footer>
         <a href="#top" class="UpButton" style="font-size: 30px;">Up</a>
     </div>
-    <div class="unselectable" id="rightClickMenu" style="display:none;" onmouseover="mouseStatus(true);" onmouseout="mouseStatus(false);">
+    <div class="unselectable" id="rightClickMenu" style="display:none;" onmouseover="mouseStatus(true);"
+        onmouseout="mouseStatus(false);">
         <table class="mouseOverBackgoundGray">
             <tr onclick="copyTextToClipboard();" id="copyTextToClipboard">
                 <th>
@@ -78,12 +78,27 @@
                     <p>Strg + R</p>
                 </th>
             </tr>
+            <tr onclick="document.getElementById('rightClickMenu').style.display = 'none';window.print();">
+                <th>
+                    <p>Drucken</p>
+                </th>
+                <th>
+                    <p>Strg + P</p>
+                </th>
+            </tr>
             <tr onclick="back()">
                 <th>
                     <p>Zurück</p>
                 </th>
                 <th>
                 </th>
+            </tr>
+            <tr onclick="pass=true;document.getElementById('qrCode').style.display='';">
+                <th>
+                    <p>QR-Code</p>
+                    <img id="qrCode" style="display: none;" src="/qrCode.png" width="200px">
+                </th>
+                <th></th>
             </tr>
         </table>
     </div>
