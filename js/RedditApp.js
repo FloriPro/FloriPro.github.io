@@ -260,6 +260,7 @@ function next() {
     document.querySelector('#title').scrollIntoView({
         behavior: 'smooth'
     });
+    setCookie("washere", "true", 0.1);
 }
 
 function setLoc(subredd, aft, sort_) {

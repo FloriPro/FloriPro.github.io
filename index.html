@@ -13,10 +13,6 @@
 <body id="body">
 
 
-    <div class="alert" style="display: none; margin-top: -68px;"><span class="closebtn" onclick="moveAwayEffect()">X
-        </span>Herzlich wilkommen, auf meiner Seite. Du wirst hier leider nichts Finden, da es nichts gibt... RIP<br>
-    </div>
-
     <div class="CookieAccept" id="CookieAccept" style="display: none; opacity: 0;">
         <h2>Cookies</h2>
         <p>Diese Website benutzt Cookies.</p>
@@ -25,9 +21,13 @@
         <button class="AcceptCookie" onclick="AcceptCookie()">Cookies Akzeptieren</button>
     </div>
 
-
     <div class="Site" style="display: block;">
+
+        <div id="alerts" style="right: 0;position: fixed;max-width: 350px;min-width: 250px;">
+        </div>
+
         <h1 id="top">FloriPro<br></h1>
+
         <div class="topnav">
         </div>
 
@@ -93,12 +93,13 @@
                 <th>
                 </th>
             </tr>
-            <tr onclick="pass=true;document.getElementById('qrCode').style.display='';">
-                <th>
+            <tr
+                onclick="pass=true;if (document.getElementById('qrCode').style.display=='none'){document.getElementById('qrCode').style.display='';}else{document.getElementById('qrCode').style.display='none';}">
+                <th colspan="2">
                     <p>QR-Code</p>
-                    <img id="qrCode" style="display: none;" src="/qrCode.png" width="200px">
+                    <a href="/qrCode.png" download><img id="qrCode"
+                            style="display: none; width: 200px; display: list-item;" src="/qrCode.png"></a>
                 </th>
-                <th></th>
             </tr>
         </table>
     </div>

@@ -20,8 +20,6 @@ function getCookie(name) {
 }
 
 function AcceptCookie() {
-    document.getElementsByClassName('alert')[0].style.display = 'block';
-    document.getElementsByClassName('alert')[0].style.marginTop = "0px";
     document.cookie = "hasAccepted=True; expires=Fri, 31 Dec 9999 23:59:59 GMT";
     document.getElementsByClassName('Site')[0].style.display = "block";
     fadeOutEffect()
@@ -31,6 +29,10 @@ function AcceptCookie() {
 window.addEventListener('load', function () {
     let hasAccepted = getCookie("hasAccepted");
     if (hasAccepted == "True") {
+        if (getCookie("washere")!="true") {
+            addMessage("Willkommen zurück!")
+        }
+        setCookie("washere", "true", 0.1);
         document.getElementsByClassName('CookieAccept')[0].style.display = "none";
     }
     else {
@@ -40,25 +42,9 @@ window.addEventListener('load', function () {
     }
 })
 
-
-//fadeOutWelcome Message
-function moveAwayEffect() {
-    var moveAwayTarget = document.getElementsByClassName("alert")[0];
-    var moveAwayTargetStyleMarginTopI = 0
-    moveAwayTarget.style.marginTop = "0px";
-    var moveAwayEffect = setInterval(function () {
-        if (moveAwayTargetStyleMarginTopI > -(moveAwayTarget.offsetHeight + 10)) {
-            moveAwayTargetStyleMarginTopI -= 1
-            moveAwayTarget.style.marginTop = moveAwayTargetStyleMarginTopI + "px";
-        } else {
-            clearInterval(moveAwayEffect);
-            document.getElementsByClassName('alert')[0].style.display = "none";
-        }
-    }, 10);
-}
-
 //fade Out Cookie Message
 function fadeOutEffect() {
+    addMessage("Herzlich willkommen, auf meiner Seite. Du wirst hier leider nichts Finden, da es nichts gibt... RIP")
     if (urlParams.get("page") == null) {
         loadNavBarAndMore("Home")
     } else {

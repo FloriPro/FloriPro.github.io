@@ -169,6 +169,7 @@ tr:hover {
     color: rgb(0, 0, 0);
     margin-bottom: 15px;
     margin-top: 0;
+    font-size: 18px;
 }
 
 
@@ -180,9 +181,7 @@ tr:hover {
     font-weight: bold;
     float: right;
     font-size: 22px;
-    line-height: 20px;
     cursor: pointer;
-    transition: 0.3s;
 }
 
 
@@ -190,4 +189,5 @@ tr:hover {
 
 .closebtn:hover {
     color: rgb(255, 255, 255);
+    transition: 1s;
 }

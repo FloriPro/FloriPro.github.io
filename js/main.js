@@ -2,6 +2,37 @@ toBoolean = function (input) {
     if (input == null) { return false; }
     return String(input).toLowerCase() === true.toString();
 };
+function getOffset(el) {
+    const rect = el.getBoundingClientRect();
+    return {
+        left: rect.left + window.scrollX,
+        top: rect.top + window.scrollY
+    };
+}
+
+
+//Fade out Messages
+function moveAwayEffect(moveAwayTarget) {
+    var moveAwayTargetStyleMarginTopI = 0
+    moveAwayTarget.style.marginTop = "0px";
+    var moveAwayEffect = setInterval(function () {
+        var startHeight = moveAwayTarget.getBoundingClientRect().height
+        if (moveAwayTargetStyleMarginTopI < 22) {
+            moveAwayTarget.style.padding = (20 - moveAwayTargetStyleMarginTopI) + "px";
+            moveAwayTarget.style.height = (20 - (moveAwayTargetStyleMarginTopI / (20 / startHeight))) + "px";
+            moveAwayTarget.style.fontSize = (20 - moveAwayTargetStyleMarginTopI) + "px";
+            moveAwayTarget.getElementsByClassName("closebtn")[0].style.fontSize = (20 - moveAwayTargetStyleMarginTopI) + "px";
+            moveAwayTargetStyleMarginTopI += 1;
+        } else {
+            clearInterval(moveAwayEffect);
+            moveAwayTarget.remove();
+        }
+    }, 8);
+}
+
+function addMessage(text) {
+    document.getElementById("alerts").innerHTML += '<div class="alert" style="margin-top: 0;"><span class="closebtn" onclick="moveAwayEffect(this.parentElement)">X </span>' + text + '<br></div>'
+}
 
 //smooth movement
 $(document).on('click', 'a[href^="#"]', function (event) {
@@ -166,7 +197,7 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
                 addPageLink.appendChild(addPageLinkText);
 
                 addPageLink.title = SubPageElement;
-                addPageLink.href = "#" + SubPageElement;
+                addPageLink.href = "#" + SubPageElement.replace(" ", "");
                 document.getElementsByClassName("topnav2")[0].appendChild(addPageLink);
             }
         }
@@ -193,12 +224,12 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
         for (x in Text) {
             if (x != "type") {
                 if (Text["type"] != "multiHtml") {
-                    t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
+                    t.innerHTML += '<h2 id="' + x.replace(" ", "") + '">' + x + "</h2>";
                     t.innerHTML += '<p>' + Text[x] + "</p>";
                     t.innerHTML += '<p style="padding-bottom: 5%;"></p>';
                 } else {
                     if (x != "js") {
-                        t.innerHTML += '<h2 id="' + x + '">' + x + "</h2>";
+                        t.innerHTML += '<h2 id="' + x.replace(" ", "") + '">' + x + "</h2>";
                         t.innerHTML += Text[x]
                         t.innerHTML += '<p style="padding-bottom: 5%;"></p>';
                     }
@@ -213,18 +244,28 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
 
 
 function loadNavBarAndMore(pageName) {
+    setCookie("washere", "true", 0.1);
     document.title = "FloriPro | " + pageName;
     if (localStorage["jsonData"] == undefined) {
         var ts = new Date().getTime();
         var data = { _: ts };
         $.getJSON("/navigation.json", data, function (json) {
-            loadNavBarAndMoreJsonInput(json, pageName);
+
+            if (pageName in json) {
+                loadNavBarAndMoreJsonInput(json, pageName);
+            } else {
+                loadNavBarAndMoreJsonInput(json, "404");
+            }
             console.log("Saving");
             localStorage.setItem('jsonData', JSON.stringify(json));
         });
     } else {
-        console.log("fromSave");
-        loadNavBarAndMoreJsonInput(JSON.parse(localStorage.getItem('jsonData')), pageName);
+        var json = JSON.parse(localStorage.getItem('jsonData'));
+        if (pageName in json) {
+            loadNavBarAndMoreJsonInput(json, pageName);
+        } else {
+            loadNavBarAndMoreJsonInput(json, "404");
+        }
     }
 
     //change url
@@ -261,11 +302,13 @@ onmousemove = function (e) {
 if (toBoolean(getCookie("contextMenu"))) {
     if (document.addEventListener) {
         document.addEventListener('contextmenu', function (e) {
+            document.getElementById('qrCode').style.display = 'none';
             openMenu();
             e.preventDefault();
         }, false);
     } else {
         document.attachEvent('oncontextmenu', function () {
+            document.getElementById('qrCode').style.display = 'none';
             openMenu();
             window.event.returnValue = false;
         });
@@ -278,11 +321,11 @@ $(document).bind("mousedown", function (event) {
         document.getElementById("rightClickMenu").style.display = "none";
     }
 });
+
+pass = false;
+
 $(document).bind("click", function (event) {
     if (pass != true) {
-        //reset
-        document.getElementById('qrCode').style.display='none';
-        
         document.getElementById("rightClickMenu").style.display = "none";
     } else { pass = false; }
 });
@@ -373,6 +416,10 @@ function copyLinkToClipboard() {
         copy(linkText)
         linkText = ""
     }
+}
+
+function addMsg() {
+
 }
 
 var exactText = "";
