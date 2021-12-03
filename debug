@@ -1,4 +1,0 @@
-//debug I-Phone
-
-remotedebug_ios_webkit_adapter --port=9000
-chrome://inspect/#devices

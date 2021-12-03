@@ -30,7 +30,7 @@ window.addEventListener('load', function () {
     let hasAccepted = getCookie("hasAccepted");
     if (hasAccepted == "True") {
         if (getCookie("washere")!="true") {
-            addMessage("Willkommen zurück!")
+            addMessage("Willkommen zurÃ¼ck!")
         }
         setCookie("washere", "true", 0.1);
         document.getElementsByClassName('CookieAccept')[0].style.display = "none";
