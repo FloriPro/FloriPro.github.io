@@ -95,7 +95,7 @@ function getImg(now) {
         }
     } else if ("url" in now) {
         now["url"] = now["url"].replace("gifv", "jpg")
-        if (!now["url"].match(/.(jpg|jpeg|png|gif)$/i)) {} else {
+        if (!now["url"].match(/.(jpg|jpeg|png|gif)$/i)) { } else {
             imgs.push(now["url"]);
         }
     } //url_overridden_by_dest
@@ -126,7 +126,7 @@ async function load(now, title, text, img) {
             video_video = document.getElementById("video_video");
 
             //wait until load
-            video_video.addEventListener('loadeddata', function() {
+            video_video.addEventListener('loadeddata', function () {
                 loaded += 1;
                 if (loaded == 2) {
                     video_audio.muted = false;
@@ -137,7 +137,7 @@ async function load(now, title, text, img) {
                     video_video.addEventListener('canplay', videoPausePlayHandler, false);
                 }
             }, false);
-            video_audio.addEventListener('loadeddata', function() {
+            video_audio.addEventListener('loadeddata', function () {
                 loaded += 1;
                 if (loaded == 2) {
                     video_audio.muted = false;
@@ -174,8 +174,8 @@ function videoPausePlayHandler(e) {
 async function preloadImages(urls) {
     var loadedCounter = 0;
     var toBeLoadedNumber = urls.length;
-    urls.forEach(function(url) {
-        preloadImage(url, function() {
+    urls.forEach(function (url) {
+        preloadImage(url, function () {
             loadedCounter++;
         });
     });
@@ -188,7 +188,7 @@ async function preloadImages(urls) {
 }
 
 async function get(i) {
-    $.getJSON(url, function(json) {
+    $.getJSON(url, function (json) {
         after = json["data"]["after"];
 
         j = json;
@@ -278,6 +278,45 @@ function back() {
     url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + afterO;
     get(1);
 }
+async function downloadImage(imageSrc) {
+    const image = await fetch(imageSrc)
+    const imageBlog = await image.blob()
+    const imageURL = URL.createObjectURL(imageBlog)
+
+    const link = document.createElement('a')
+    link.href = imageURL
+    link.download = 'image file name here'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+}
+function Sleep(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+
+function handle(x, json) {
+    now = json["data"]["children"][x]["data"];
+
+    imgs = getImg(now)
+    //console.log(imgs);
+
+    imgs.forEach(element => {
+        downloadImage(element)
+    });
+}
+
+function downloadReddit() {
+    console.log("starting")
+    url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=100';
+    $.getJSON(url, function (json) {
+        console.log("got")
+        for (var x = 0; x < 100; x++) {
+            console.log("moin")
+            setTimeout(handle, x * 200, x, json)
+
+        }
+    });
+}
 
 type = "watching"
 
@@ -289,7 +328,7 @@ function list() {
 }
 async function listLoadFunction(i) {
     url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
-    $.getJSON(url, function(json) {
+    $.getJSON(url, function (json) {
         after = json["data"]["after"];
         j = json;
         now = json["data"]["children"][0]["data"];
