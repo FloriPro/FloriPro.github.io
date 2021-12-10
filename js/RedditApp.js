@@ -1,14 +1,10 @@
-var subreddit = ['memes'];
+var subreddit = 'memes';
 var sort_by = 'hot';
 var sort_time = 'all';
 var save_dir = 'default';
 var limit = '1';
-var after = [];
-var afterO = [];
-var afterList = [];
+var after = ""
 var saveData = false;
-var subredditId = 0;
-var listLoaded = 0
 
 
 video_audio = null
@@ -17,26 +13,30 @@ video_video = null
 //load data
 urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get("subreddit") != null) {
-    subreddit = urlParams.get("subreddit").split(",");
-    console.log(subreddit);
+    subreddit = urlParams.get("subreddit");
 } else {
     su = getCookie("RedditSubreddit");
     if (su != null) {
-        subreddit = su.split(",");
+        subreddit = su;
     }
 }
 
-function makeAfter() {
-    subreddit.forEach(element => {
-        after.push([""]);
-        afterO.push([""]);
-        afterList.push([[]]);
-    });
+if (urlParams.get("sort") != null) {
+    sort_by = urlParams.get("sort");
+} else {
+    so = getCookie("RedditSort");
+    if (so != null) {
+        sort_by = so;
+    }
 }
-makeAfter()
 
-url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after[subredditId];
 
+if (urlParams.get("after") != null) {
+    after = urlParams.get("after");
+}
+url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
+
+var afterList = [];
 data = [];
 
 i = 0;
@@ -188,29 +188,28 @@ async function preloadImages(urls) {
 }
 
 async function get(i) {
-    document.querySelector("#next").innerHTML = "<br>...";
+    document.querySelector("#next").innerHTML="<br>...";
     $.getJSON(url, function (json) {
-        document.querySelector("#next").innerHTML = "<br>-->";
-        after[subredditId] = json["data"]["after"];
+        document.querySelector("#next").innerHTML="<br>-->";
+        after = json["data"]["after"];
 
         j = json;
 
-        console.log(url);
         now = json["data"]["children"][0]["data"];
 
         preloadImages(getImg(now));
 
         if (i == 1) {
-            afterO[subredditId] = after[subredditId]
+            afterO = after
             title = document.getElementById("title")
             text = document.getElementById("text")
             img = document.getElementById("img")
             load(now, title, text, img);
-            url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after[subredditId];
+            url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
             get(0)
         }
         if (i == 2) {
-            afterO[subredditId] = after[subredditId]
+            afterO = after
             title = document.getElementById("title")
             text = document.getElementById("text")
             img = document.getElementById("img")
@@ -222,16 +221,15 @@ async function get(i) {
     });
 }
 
-if (after[subredditId] == "") {
+if (after == "") {
     get(1)
 } else {
-    url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after[subredditId];
+    url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
     get(2);
 }
+afterList = []
 
 async function next() {
-    subredditId += 1
-    if (subredditId >= subreddit.length) { subredditId = 0 }
     if (video_video != null) {
         video_video.remove()
         video_audio.remove()
@@ -247,18 +245,18 @@ async function next() {
     img = document.getElementById("img")
 
     //set "subreddit" and after
-    setLoc(subreddit.join(","), afterO[subredditId], sort_by)
+    setLoc(subreddit, afterO, sort_by)
 
     //back
-    afterList[subredditId].push(afterO[subredditId]);
-    if (afterList[subredditId].length > 15) {
-        afterList[subredditId].shift();
+    afterList.push(afterO);
+    if (afterList.length > 15) {
+        afterList.shift();
     }
 
     //show and load new
     load(now, title, text, img);
-    url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after[subredditId];
-    afterO[subredditId] = after[subredditId]
+    url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
+    afterO = after
     get(0)
 
     document.querySelector('#title').scrollIntoView({
@@ -269,38 +267,37 @@ async function next() {
 
 function setLoc(subredd, aft, sort_) {
     //removed, because spam
-    let newUrlIS = window.location.origin + window.location.pathname + '?page=' + urlParams.get("page") + '&subreddit=' + subredd;// + "&after=" + aft + "&sort=" + sort_;
-    history.pushState({}, null, newUrlIS);
+    //let newUrlIS = window.location.origin + window.location.pathname + '?page=' + urlParams.get("page") + '&subreddit=' + subredd + "&after=" + aft + "&sort=" + sort_;
+    //history.pushState({}, null, newUrlIS);
 }
 
 function back() {
-    subredditId--;
-    if (subredditId < 0) { subredditId = subreddit.length - 1; }
-    afterO[subredditId] = afterList[subredditId][afterList[subredditId].length - 2];
-    after[subredditId] = afterList[subredditId][afterList[subredditId].length - 1];
-    afterList[subredditId].pop();
+    afterO = afterList[afterList.length - 2];
+    after = afterList[afterList.length - 1];
+    afterList.pop();
 
-    setLoc(subreddit.join(","), afterO[subredditId], sort_by)
+    setLoc(subreddit, afterO, sort_by)
 
-    url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + afterO[subredditId];
+    url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + afterO;
     get(1);
 }
 
 type = "watching"
 
+let listLoaded = 0
 
 function list() {
     document.getElementById("buttons").style.display = "none";
-    document.querySelector("#doAsList").innerText = "Mehr Laden";
+    document.querySelector("#doAsList").innerText="Mehr Laden";
     if (document.getElementById("Post") != null) { document.getElementById("Post").remove(); }
-    var max = 50;
-    listLoaded = max + listLoaded + 1;
-    listLoadFunction(listLoaded, listLoaded - max);
+    var max=50;
+    listLoaded = max + listLoaded+1;
+    listLoadFunction(listLoaded, listLoaded-max);
 }
 async function listLoadFunction(max, i) {
-    url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after[subredditId];
+    url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
     $.getJSON(url, function (json) {
-        after[subredditId] = json["data"]["after"];
+        after = json["data"]["after"];
         j = json;
         now = json["data"]["children"][0]["data"];
 
@@ -310,7 +307,7 @@ async function listLoadFunction(max, i) {
 
 
         link = "https://reddit.com" + now["permalink"]
-        document.getElementById("post_" + i).innerHTML += "<p style='padding-bottom: 20%;'></p><h1 class='title'>" + now["title"] + "</h1>" + "<a target='_blank' href='" + link + "'>reddit.com</p>";;
+        document.getElementById("post_" + i).innerHTML += "<p style='padding-bottom: 20%;'></p><h1 class='title'>" + now["title"] + "</h1>"+"<a target='_blank' href='" + link + "'>reddit.com</p>";;
         document.getElementById("post_" + i).innerHTML += "<div class='text'><p>" + selftext + "</p></div>";
         if (now["selftext_html"] != null) { selftext = now["selftext_html"] } else { selftext = "" }
         for (x in imgs) {
@@ -337,20 +334,9 @@ async function listLoadFunction(max, i) {
     });
 }
 
-function newCommunity() {
-    subreddit.push("")
-    type = "watching";
-    change();
-}
-function removeSubreddit(i){
-    subreddit.splice(i,1);
-    type = "watching";
-    change();
-}
-
 
 function updated() {
-    setCookie("RedditSubreddit", subreddit.join(","), 365);
+    setCookie("RedditSubreddit", subreddit, 365);
     setCookie("RedditSort", sort_by, 365);
 }
 
@@ -364,17 +350,7 @@ function change() {
         document.getElementById("options").style.display = "unset";
         document.getElementById("doAsList").style.display = "none";
         document.getElementById("showingType").value = sort_by;
-
-
-        document.querySelectorAll(".subbreddit").forEach(valu => {
-            valu.remove()
-        });
-        var i = 0;
-        subreddit.forEach(element => {
-            document.querySelector("#subreddits").innerHTML += '<div class="subbreddit"><input type="text" class="community" value="' + subreddit[i] + '"><button style="font: 200%;" onclick="removeSubreddit('+i+');">-</button></div>'
-            i++;
-        });
-
+        document.getElementById("community").value = subreddit;
         type = "changeing"
     } else if (type == "changeing") {
         document.getElementById("Post").style.display = "unset";
@@ -383,31 +359,22 @@ function change() {
         document.getElementById("doAsList").style.display = "unset";
         document.getElementById("change").innerText = "Einstellungen"
         sort_byO = sort_by;
-        sort_by = document.querySelector("#showingType").value;
+        sort_by = document.getElementById("showingType").value;
         subredditO = subreddit;
-
-        var i = 0;
-        document.querySelectorAll(".community").forEach(element => {
-            subreddit[i] = element.value;
-            i++;
-        });
-        makeAfter();
-
+        subreddit = document.getElementById("community").value;
         saveData = document.getElementById("dataSave").checked;
-
-        subredditId = 0;
 
 
         type = "watching";
         if (sort_byO != sort_by) {
-            after[subredditId] = "";
-            url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after[subredditId];
+            after = "";
+            url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
             get(1);
             updated()
         }
         if (subredditO != subreddit) {
-            after[subredditId] = "";
-            url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after[subredditId];
+            after = "";
+            url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
             get(1);
             updated()
         }
