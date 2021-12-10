@@ -6,8 +6,11 @@
         "Spenden": "tue es einfach nicht... <b>das ist es nicht wert.</b>"
     },
     "Reddit": {
+        "SearchParams": [
+            "subreddit"
+        ],
         "type": "html",
-        "html": "<div style=\"max-width: 450px;\" id=\"postSection\"><div id=\"Post\"><h1 id=\"title\">Loading...</h1><div id=\"text\">Loading...</div><div id=\"img\"></div></div></div><button id=\"change\" style=\"font-size: 100%;\" onclick=\"change()\">Einstellungen</button><button id=\"doAsList\" style=\"font-size: 100%;\" onclick=\"list()\">Liste</button><div id=\"options\" style=\"display:none\"><br><br><select name=\"pets\" id=\"showingType\"><option value=\"hot\">Heiß</option><option value=\"new\">Neu</option><option value=\"top\">Top</option><option value=\"rising\">Steigend</option></select><br><input type=\"text\" id=\"community\" value=\"None\"><br><input type=\"checkbox\" id=\"dataSave\" name=\"dataSave\"><label for=\"dataSave\">Daten sparen</label></div><p style=\"padding-bottom: 20rem;\"></p><table class=\"changMeme\" id=\"buttons\"><tr><td style=\"width:50%\"><button style=\"float: right;width: 100%;text-align: center;height: 150%;\" id=\"back\" onclick=\"back()\"><br><--</button></td><td style=\"width:50%\"><button style=\"float: right;width: 100%;text-align: center;height: 150%;\" id=\"next\" onclick=\"next()\"><br>--></button></td></tr></table>",
+        "html": "<div style=\"max-width: 450px;\" id=\"postSection\"><div id=\"Post\"><h1 id=\"title\">Loading...</h1><div id=\"text\">Loading...</div><div id=\"img\"></div></div></div><button id=\"change\" style=\"font-size: 100%;\" onclick=\"change()\">Einstellungen</button><button id=\"doAsList\"style=\"font-size: 100%;\" onclick=\"list()\">Liste</button><div id=\"options\" style=\"display:none\"><br><br><select name=\"pets\" id=\"showingType\"><option value=\"hot\">Heiß</option><option value=\"new\">Neu</option><option value=\"top\">Top</option><option value=\"rising\">Steigend</option></select><br><div id=\"subreddits\"><div class=\"subbreddit\"><input type=\"text\" class=\"community\"><button style=\"font: 200%;\" onclick=\"newCommunity();\">-</button></div></div><button style=\"font: 200%;\" onclick=\"newCommunity();\">+</button><br><input type=\"checkbox\" id=\"dataSave\" name=\"dataSave\"><label for=\"dataSave\">Daten sparen</label></div><p style=\"padding-bottom: 20rem;\"></p><table class=\"changMeme\" id=\"buttons\"><tr><td style=\"width:50%\"><button style=\"float: right;width: 100%;text-align: center;height: 150%;\" id=\"back\"onclick=\"back()\"><br><--</button></td><td style=\"width:50%\"><button style=\"float: right;width: 100%;text-align: center;height: 150%;\" id=\"next\"onclick=\"next()\"><br>--></button></td></tr></table>",
         "javaScriptFiles": [
             "/js/RedditApp.js?id=2"
         ],
@@ -16,6 +19,7 @@
         ]
     },
     "404": {
+        "SearchParams": [],
         "type": "html",
         "html": "<p>Die von dir gewünschte Seite ist leider nicht erreichbar...</p><p>zurück zur vorherigen Seite? </p><button class=\"backToSiteBefore\" type=\"button\" onclick=\"history.back()\">Zurück</button><br><p><br></p><p>(Error Code: 404)<br></p>"
     },
@@ -25,10 +29,10 @@
         "unknown": "<p>unknown</p>",
         "js": "function getActiveIframe() {d = document.querySelectorAll(\".Iframe\");d.forEach(x => {document.getElementById(x.id).contentWindow.changeFocus(x == document.activeElement)});}function foo(){}setTimeout(foo,500);window.setInterval(getActiveIframe, 200);"
     },
-    "Einstellungen":{
-        "type":"multiHtml",
-        "Context Menu":"<input type=\"checkbox\" id=\"contxtMenuSwitch\" name=\"contxtMenuSwitch\" onclick=\"setCookie('contextMenu',this.checked,365);location.reload();\"><label for=\"contxtMenuSwitch\">Spezielles Menü</label></div>",
-        "Cookies löschen":"<button onclick=\"const autoPlayer = (l = 4) => {if (l < 1) {const cookies = document.cookie.split(';'); for (const cookie of cookies) { const eqPos = cookie.indexOf('='); const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie; document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'; } history.pushState({}, null, window.location.origin + '/?page=Home'); location.reload();return;};l--;setTimeout(() => {addMessage('Löschung in ' + l);autoPlayer(l);}, 1000);};autoPlayer();\">Löschen</button>",
-        "js":"document.getElementById('contxtMenuSwitch').checked=toBoolean(getCookie('contextMenu'));"
+    "Einstellungen": {
+        "type": "multiHtml",
+        "Context Menu": "<input type=\"checkbox\" id=\"contxtMenuSwitch\" name=\"contxtMenuSwitch\" onclick=\"setCookie('contextMenu',this.checked,365);location.reload();\"><label for=\"contxtMenuSwitch\">Spezielles Menü</label></div>",
+        "Cookies löschen": "<button onclick=\"const autoPlayer = (l = 4) => {if (l < 1) {const cookies = document.cookie.split(';'); for (const cookie of cookies) { const eqPos = cookie.indexOf('='); const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie; document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'; } history.pushState({}, null, window.location.origin + '/?page=Home'); location.reload();return;};l--;setTimeout(() => {addMessage('Löschung in ' + l);autoPlayer(l);}, 1000);};autoPlayer();\">Löschen</button>",
+        "js": "document.getElementById('contxtMenuSwitch').checked=toBoolean(getCookie('contextMenu'));"
     }
 }
