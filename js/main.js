@@ -151,6 +151,14 @@ function changePage(pageName) {
 }
 
 
+function loadJsAndStyleAsync(Text) {
+    for (x in Text["javaScriptFiles"]) {
+        loadJS(Text["javaScriptFiles"][x], document.body)
+    }
+    for (x in Text["javaScriptFiles"]) {
+        loadStyle(window.location.origin + Text["stylesheetFiles"][x]);
+    }
+}
 function loadNavBarAndMoreJsonInput(json, pageName) {
     clearBoxClass("topnav");
     clearBoxClass("topnav2");
@@ -177,7 +185,6 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
             //<a href="/">Home</a>
         }
     }
-
 
     //sub Pages
     //var name = window.location.pathname
@@ -210,17 +217,17 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
     var Text = json[name]
 
 
+    var notDel = []
+    //search_params.forEach(function (value, key) { console.log(key + ": " + value) });
+
     if (Text["type"] == "js") {
         eval(Text["javascript"]);
     } else if (Text["type"] == "html") {
+        notDel = Text["SearchParams"];
         t.innerHTML += Text["html"]
-        for (x in Text["javaScriptFiles"]) {
-            loadJS(Text["javaScriptFiles"][x], document.body)
-        }
-        for (x in Text["javaScriptFiles"]) {
-            loadStyle(window.location.origin + Text["stylesheetFiles"][x]);
-        }
+        setTimeout(loadJsAndStyleAsync, 10, Text);
     } else if (Text["type"] == "text" || Text["type"] == "multiHtml") {
+
         for (x in Text) {
             if (x != "type") {
                 if (Text["type"] != "multiHtml") {
@@ -240,10 +247,27 @@ function loadNavBarAndMoreJsonInput(json, pageName) {
             }
         }
     }
+
+
+    //change url
+    url = new URL(window.location.href);
+    for (var x = 0; x < 10; x++) {
+        var search_params = url.searchParams;
+        search_params.forEach(function (value, key) {
+            if (!(notDel.includes(key))) {
+                search_params.delete(key);
+            }
+        });
+    }
+    search_params.set('page', pageName);
+    url.search = search_params.toString();
+    let newUrlIS = url.toString();
+    history.pushState({}, null, newUrlIS);
 }
 
 
 function loadNavBarAndMore(pageName) {
+
     setCookie("washere", "true", 0.1);
     document.title = "FloriPro | " + pageName;
     if (localStorage["jsonData"] == undefined) {
@@ -262,15 +286,11 @@ function loadNavBarAndMore(pageName) {
     } else {
         var json = JSON.parse(localStorage.getItem('jsonData'));
         if (pageName in json) {
-            loadNavBarAndMoreJsonInput(json, pageName);
+            setTimeout(loadNavBarAndMoreJsonInput, 100, json, pageName);
         } else {
-            loadNavBarAndMoreJsonInput(json, "404");
+            setTimeout(loadNavBarAndMoreJsonInput, 100, json, "404");
         }
     }
-
-    //change url
-    let newUrlIS = window.location.origin + '/?page=' + pageName;
-    history.pushState({}, null, newUrlIS);
 }
 
 
