@@ -230,8 +230,8 @@ if (after[subredditId] == "") {
 }
 
 async function next() {
-    subredditId += 1
-    if (subredditId >= subreddit.length) { subredditId = 0 }
+    subredditId += 1;
+    if (subredditId >= subreddit.length) { subredditId = 0; }
     if (video_video != null) {
         video_video.remove()
         video_audio.remove()
@@ -298,8 +298,13 @@ function list() {
     listLoadFunction(listLoaded, listLoaded - max);
 }
 async function listLoadFunction(max, i) {
+        
+    subredditId += 1;
+    if (subredditId >= subreddit.length) { subredditId = 0; }
+
     url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after[subredditId];
     $.getJSON(url, function (json) {
+
         after[subredditId] = json["data"]["after"];
         j = json;
         now = json["data"]["children"][0]["data"];
@@ -342,8 +347,8 @@ function newCommunity() {
     type = "watching";
     change();
 }
-function removeSubreddit(i){
-    subreddit.splice(i,1);
+function removeSubreddit(i) {
+    subreddit.splice(i, 1);
     type = "watching";
     change();
 }
@@ -371,7 +376,7 @@ function change() {
         });
         var i = 0;
         subreddit.forEach(element => {
-            document.querySelector("#subreddits").innerHTML += '<div class="subbreddit"><input type="text" class="community" value="' + subreddit[i] + '"><button style="font: 200%;" onclick="removeSubreddit('+i+');">-</button></div>'
+            document.querySelector("#subreddits").innerHTML += '<div class="subbreddit"><input type="text" class="community" value="' + subreddit[i] + '"><button style="font: 200%;" onclick="removeSubreddit(' + i + ');">-</button></div>'
             i++;
         });
 
