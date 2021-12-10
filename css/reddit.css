@@ -25,12 +25,13 @@ input {
 
 .changMeme {
     position: fixed;
-    bottom: 0;
-    right: 0;
     background-color: #ddd;
     color: black;
     border-radius: 5px;
     text-decoration: none;
     bottom: 5px;
-    right: 5px;
+    right: 1%;
+    left: 1%;
+    width: 98%;
+    display: inline-table;
 }

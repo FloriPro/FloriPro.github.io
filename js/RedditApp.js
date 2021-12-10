@@ -188,7 +188,9 @@ async function preloadImages(urls) {
 }
 
 async function get(i) {
+    document.querySelector("#next").innerHTML="<br>...";
     $.getJSON(url, function (json) {
+        document.querySelector("#next").innerHTML="<br>-->";
         after = json["data"]["after"];
 
         j = json;
@@ -227,7 +229,7 @@ if (after == "") {
 }
 afterList = []
 
-function next() {
+async function next() {
     if (video_video != null) {
         video_video.remove()
         video_audio.remove()
@@ -264,8 +266,9 @@ function next() {
 }
 
 function setLoc(subredd, aft, sort_) {
-    let newUrlIS = window.location.origin + window.location.pathname + '?page=' + urlParams.get("page") + '&subreddit=' + subredd + "&after=" + aft + "&sort=" + sort_;
-    history.pushState({}, null, newUrlIS);
+    //removed, because spam
+    //let newUrlIS = window.location.origin + window.location.pathname + '?page=' + urlParams.get("page") + '&subreddit=' + subredd + "&after=" + aft + "&sort=" + sort_;
+    //history.pushState({}, null, newUrlIS);
 }
 
 function back() {
@@ -278,55 +281,20 @@ function back() {
     url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + afterO;
     get(1);
 }
-async function downloadImage(imageSrc) {
-    const image = await fetch(imageSrc)
-    const imageBlog = await image.blob()
-    const imageURL = URL.createObjectURL(imageBlog)
-
-    const link = document.createElement('a')
-    link.href = imageURL
-    link.download = 'image file name here'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-}
-function Sleep(milliseconds) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
-
-function handle(x, json) {
-    now = json["data"]["children"][x]["data"];
-
-    imgs = getImg(now)
-    //console.log(imgs);
-
-    imgs.forEach(element => {
-        downloadImage(element)
-    });
-}
-
-function downloadReddit() {
-    console.log("starting")
-    url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=100';
-    $.getJSON(url, function (json) {
-        console.log("got")
-        for (var x = 0; x < 100; x++) {
-            console.log("moin")
-            setTimeout(handle, x * 200, x, json)
-
-        }
-    });
-}
 
 type = "watching"
 
+let listLoaded = 0
+
 function list() {
     document.getElementById("buttons").style.display = "none";
-    i = 500
+    document.querySelector("#doAsList").innerText="Mehr Laden";
     if (document.getElementById("Post") != null) { document.getElementById("Post").remove(); }
-    listLoadFunction(i);
+    var max=50;
+    listLoaded = max + listLoaded+1;
+    listLoadFunction(listLoaded, listLoaded-max);
 }
-async function listLoadFunction(i) {
+async function listLoadFunction(max, i) {
     url = 'https://www.reddit.com/r/' + subreddit + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after;
     $.getJSON(url, function (json) {
         after = json["data"]["after"];
@@ -338,12 +306,12 @@ async function listLoadFunction(i) {
         document.getElementById("postSection").innerHTML += "<div id='post_" + i + "'></div>";
 
 
-
-        document.getElementById("post_" + i).innerHTML += "<p style='padding-bottom: 20%;'></p><h1 class='title'>" + now["title"] + "</h1>";
+        link = "https://reddit.com" + now["permalink"]
+        document.getElementById("post_" + i).innerHTML += "<p style='padding-bottom: 20%;'></p><h1 class='title'>" + now["title"] + "</h1>"+"<a target='_blank' href='" + link + "'>reddit.com</p>";;
         document.getElementById("post_" + i).innerHTML += "<div class='text'><p>" + selftext + "</p></div>";
         if (now["selftext_html"] != null) { selftext = now["selftext_html"] } else { selftext = "" }
         for (x in imgs) {
-            document.getElementById("post_" + i).innerHTML += "<img src='" + imgs[x] + "' width='100%' height='100%' alt='bild'></img>";;
+            document.getElementById("post_" + i).innerHTML += "<img src='" + imgs[x] + "' width='100%' height='100%' alt='bild'></img>";
         }
 
 
@@ -362,7 +330,7 @@ async function listLoadFunction(i) {
                 img.innerHTML += now["media"]["oembed"]["html"]
             }
         }
-        if (i >= 0) { listLoadFunction(i - 1); }
+        if (i < max) { listLoadFunction(max, i + 1); }
     });
 }
 
