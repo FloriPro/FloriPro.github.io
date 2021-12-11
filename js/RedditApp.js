@@ -9,6 +9,13 @@ var afterList = [];
 var saveData = false;
 var subredditId = 0;
 var listLoaded = 0
+var noDuplicate = false;
+var viewedMemes = [];
+
+if (localStorage["RedditViewedMemes"] == undefined) {
+    localStorage.setItem("RedditViewedMemes", "[]");
+}
+viewedMemes = JSON.parse(localStorage["RedditViewedMemes"]);
 
 
 video_audio = null
@@ -25,6 +32,13 @@ if (urlParams.get("subreddit") != null) {
         subreddit = su.split(",");
     }
 }
+
+
+su = getCookie("RedditnoDuplicate");
+if (su != null) {
+    noDuplicate = JSON.parse(su);
+}
+
 
 function makeAfter() {
     subreddit.forEach(element => {
@@ -69,7 +83,10 @@ function setCookie(cname, cvalue, exdays) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
-
+function addViewed(memeAddress) {
+    viewedMemes.push(memeAddress);
+    localStorage.setItem("RedditViewedMemes", JSON.stringify(viewedMemes));
+}
 
 function getImg(now) {
 
@@ -189,6 +206,9 @@ async function preloadImages(urls) {
 
 async function get(i) {
     document.querySelector("#next").innerHTML = "<br>...";
+    if (i == 0 || i == -1) {
+        url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after[subredditId];
+    }
     $.getJSON(url, function (json) {
         document.querySelector("#next").innerHTML = "<br>-->";
         after[subredditId] = json["data"]["after"];
@@ -197,6 +217,18 @@ async function get(i) {
 
         console.log(url);
         now = json["data"]["children"][0]["data"];
+        if (viewedMemes.includes(now.permalink) && noDuplicate) {
+            if (i == 1 || i == 2 || i == -1) { get(-1); } else { get(0); }
+            return;
+        } else if (noDuplicate) {
+            addViewed(now.permalink)
+        }
+
+        if (i == -1 && noDuplicate) {
+            next();
+        }
+
+
 
         preloadImages(getImg(now));
 
@@ -257,7 +289,7 @@ async function next() {
 
     //show and load new
     load(now, title, text, img);
-    url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after[subredditId];
+    //url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after[subredditId];
     afterO[subredditId] = after[subredditId]
     get(0)
 
@@ -298,7 +330,7 @@ function list() {
     listLoadFunction(listLoaded, listLoaded - max);
 }
 async function listLoadFunction(max, i) {
-        
+
     subredditId += 1;
     if (subredditId >= subreddit.length) { subredditId = 0; }
 
@@ -369,6 +401,7 @@ function change() {
         document.getElementById("options").style.display = "unset";
         document.getElementById("doAsList").style.display = "none";
         document.getElementById("showingType").value = sort_by;
+        document.getElementById("NoDuplicate").checked = noDuplicate;
 
 
         document.querySelectorAll(".subbreddit").forEach(valu => {
@@ -386,7 +419,15 @@ function change() {
         document.getElementById("buttons").style.display = "inline-table";
         document.getElementById("options").style.display = "none";
         document.getElementById("doAsList").style.display = "unset";
-        document.getElementById("change").innerText = "Einstellungen"
+        document.getElementById("change").innerText = "Einstellungen";
+
+        setCookie("RedditnoDuplicate", JSON.stringify(document.getElementById("NoDuplicate").checked), 100);
+
+        if (noDuplicate != document.getElementById("NoDuplicate").checked) {
+            localStorage.setItem("RedditViewedMemes", "[]");
+        }
+        noDuplicate = document.getElementById("NoDuplicate").checked;
+
         sort_byO = sort_by;
         sort_by = document.querySelector("#showingType").value;
         subredditO = subreddit;
