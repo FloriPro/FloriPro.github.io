@@ -173,7 +173,40 @@ async function load(now, title, text, img) {
     for (x in g) {
         img.innerHTML += "<img src='" + g[x] + "' width='100%' height='100%' alt='Bild(kann nicht angezeigt werden, wenn du das hier siehst)'></img>";
     }
+
+    //load comments:
+    commntLink = "https://www.reddit.com" + now.permalink + ".json?raw_json=1";
+    console.log(commntLink);
+
+    document.getElementById("comments0").innerHTML="";
+
+    $.getJSON(commntLink, function (json) {
+        loadCommentsRecursively(json["1"], 0,"comments0");
+    });
+
+
+
+    return;
+
 }
+
+function loadCommentsRecursively(data, indent, tag) {
+    if (data["data"] != undefined) {
+        comment = data["data"]["children"];
+        var i=0
+        if (comment != undefined) {
+            comment.forEach(element => {
+                if (element.kind == "t1" && i<10) {
+                    console.log();//_html
+                    document.getElementById(tag).innerHTML+='<div style="margin-left: '+5*indent+'px" id="'+tag+JSON.stringify(i)+'">'+element.data.body_html+"</div>"
+                    loadCommentsRecursively(element["data"]["replies"], indent + 1,tag+JSON.stringify(i))
+                }
+                i++;
+            });
+        }
+    }
+}
+
 
 function videoPausePlayHandler(e) {
     video_audio.currentTime = video_video.currentTime;
@@ -223,7 +256,6 @@ async function get(i) {
         } else if (noDuplicate) {
             addViewed(now.permalink)
         }
-
         if (i == -1 && noDuplicate) {
             next();
         }
