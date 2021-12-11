@@ -23,7 +23,7 @@ input {
     display: none;
 }*/
 
-.changMeme {
+#changMeme {
     position: fixed;
     background-color: #ddd;
     color: black;

@@ -174,18 +174,21 @@ async function load(now, title, text, img) {
         img.innerHTML += "<img src='" + g[x] + "' width='100%' height='100%' alt='Bild(kann nicht angezeigt werden, wenn du das hier siehst)'></img>";
     }
 
+
+
+    document.removeEventListener("scroll", scroll);
+
     //load comments:
     commntLink = "https://www.reddit.com" + now.permalink + ".json?raw_json=1";
     console.log(commntLink);
 
-    document.getElementById("comments0").innerHTML="";
+    document.querySelector("#comments0").querySelector(".md").innerHTML = "";
+
+    document.querySelector("#imagesEtc").style.marginTop = "31.0351px";
 
     $.getJSON(commntLink, function (json) {
-        loadCommentsRecursively(json["1"], 0,"comments0");
+        loadCommentsRecursively(json["1"], 0, "comments0");
     });
-
-
-
     return;
 
 }
@@ -193,18 +196,42 @@ async function load(now, title, text, img) {
 function loadCommentsRecursively(data, indent, tag) {
     if (data["data"] != undefined) {
         comment = data["data"]["children"];
-        var i=0
+        var i = 0
         if (comment != undefined) {
             comment.forEach(element => {
-                if (element.kind == "t1" && i<10) {
+                if (element.kind == "t1" && i < 10) {
                     console.log();//_html
-                    document.getElementById(tag).innerHTML+='<div style="margin-left: '+5*indent+'px" id="'+tag+JSON.stringify(i)+'">'+element.data.body_html+"</div>"
-                    loadCommentsRecursively(element["data"]["replies"], indent + 1,tag+JSON.stringify(i))
+                    document.querySelector("#" + tag).querySelector(".md").innerHTML += '<div id="' + tag + JSON.stringify(i) + '"><div style="display: flex;margin-left: 1px;" id="' + tag + JSON.stringify(i) + 'a">' + '<div style="width: 1px;background: gray;"></div><div style="width: 5px;"></div>' + element.data.body_html + "</div></div><br>"
+                    document.querySelector("#" + tag + JSON.stringify(i)).querySelector(".md").innerHTML = "<h4 style=\"height: 0px;\">" + element.data.author + "</h4>" + document.querySelector("#" + tag + JSON.stringify(i)).querySelector(".md").innerHTML
+                    loadCommentsRecursively(element["data"]["replies"], indent + 1, tag + JSON.stringify(i))
                 }
                 i++;
             });
+            if (indent == 0) {
+                if (document.querySelector("#imagesEtc").offsetHeight < window.innerHeight - document.querySelector("#changMeme").offsetHeight && window.innerWidth > (document.querySelector("#comments").offsetWidth + document.querySelector("#imagesEtc").offsetWidth + 32)) {
+                    scrollStandart = document.querySelector("#imagesEtc").getBoundingClientRect().top + document.documentElement.scrollTop
+                    document.addEventListener("scroll", scroll);
+                }
+            }
         }
     }
+}
+
+window.onresize = function () {
+    if (document.querySelector("#imagesEtc").offsetHeight < window.innerHeight - document.querySelector("#changMeme").offsetHeight && window.innerWidth > (document.querySelector("#comments").offsetWidth + document.querySelector("#imagesEtc").offsetWidth + 32)) {
+        scrollStandart = document.querySelector("#imagesEtc").getBoundingClientRect().top + document.documentElement.scrollTop
+        document.addEventListener("scroll", scroll);
+    } else {
+        document.removeEventListener("scroll", scroll);
+        document.querySelector("#imagesEtc").style.marginTop = "31.0351px";
+    }
+    console.log("resize");
+}
+
+function scroll() {
+    //if (JSON.parse(document.querySelector("#imagesEtc").style.marginTop.replace("px", "")) < window.scrollY) { scrollStandart -= 1; }
+    if (window.scrollY < scrollStandart) { document.querySelector("#imagesEtc").style.marginTop = scrollStandart; }
+    else { document.querySelector("#imagesEtc").style.marginTop = window.scrollY - scrollStandart + "px"; }
 }
 
 
