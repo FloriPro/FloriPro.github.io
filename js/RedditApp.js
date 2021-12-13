@@ -208,10 +208,12 @@ function loadCommentsRecursively(data, indent, tag) {
                 i++;
             });
             if (indent == 0) {
-                if (document.querySelector("#imagesEtc").offsetHeight < window.innerHeight - document.querySelector("#changMeme").offsetHeight && window.innerWidth > (document.querySelector("#comments").offsetWidth + document.querySelector("#imagesEtc").offsetWidth + 32)) {
+                /*if (document.querySelector("#imagesEtc").offsetHeight < window.innerHeight - document.querySelector("#changMeme").offsetHeight && window.innerWidth > (document.querySelector("#comments").offsetWidth + document.querySelector("#imagesEtc").offsetWidth + 32)) {
                     scrollStandart = document.querySelector("#imagesEtc").getBoundingClientRect().top + document.documentElement.scrollTop
                     document.addEventListener("scroll", scroll);
-                }
+                    document.querySelector("section").style.display="flex";
+                }*/
+                window.onresize();
             }
         }
     }
@@ -221,9 +223,11 @@ window.onresize = function () {
     if (document.querySelector("#imagesEtc").offsetHeight < window.innerHeight - document.querySelector("#changMeme").offsetHeight && window.innerWidth > (document.querySelector("#comments").offsetWidth + document.querySelector("#imagesEtc").offsetWidth + 32)) {
         scrollStandart = document.querySelector("#imagesEtc").getBoundingClientRect().top + document.documentElement.scrollTop
         document.addEventListener("scroll", scroll);
+        document.querySelector("section").style.display="flex";
     } else {
         document.removeEventListener("scroll", scroll);
         document.querySelector("#imagesEtc").style.marginTop = "31.0351px";
+        document.querySelector("section").style.display="unset";
     }
     console.log("resize");
 }
@@ -381,7 +385,7 @@ type = "watching"
 
 
 function list() {
-    document.getElementById("buttons").style.display = "none";
+    document.getElementById("changMeme").style.display = "none";
     document.querySelector("#doAsList").innerText = "Mehr Laden";
     if (document.getElementById("Post") != null) { document.getElementById("Post").remove(); }
     var max = 50;
@@ -448,6 +452,7 @@ function removeSubreddit(i) {
 function updated() {
     setCookie("RedditSubreddit", subreddit.join(","), 365);
     setCookie("RedditSort", sort_by, 365);
+    setLoc(subreddit.join(","), afterO[subredditId], sort_by)
 }
 
 updated()
@@ -455,7 +460,7 @@ updated()
 function change() {
     if (type == "watching") {
         document.getElementById("Post").style.display = "none";
-        document.getElementById("buttons").style.display = "none";
+        document.getElementById("changMeme").style.display = "none";
         document.getElementById("change").innerText = "Fertig";
         document.getElementById("options").style.display = "unset";
         document.getElementById("doAsList").style.display = "none";
@@ -475,7 +480,7 @@ function change() {
         type = "changeing"
     } else if (type == "changeing") {
         document.getElementById("Post").style.display = "unset";
-        document.getElementById("buttons").style.display = "inline-table";
+        document.getElementById("changMeme").style.display = "inline-table";
         document.getElementById("options").style.display = "none";
         document.getElementById("doAsList").style.display = "unset";
         document.getElementById("change").innerText = "Einstellungen";
@@ -491,10 +496,9 @@ function change() {
         sort_by = document.querySelector("#showingType").value;
         subredditO = subreddit;
 
-        var i = 0;
+        subreddit=[];
         document.querySelectorAll(".community").forEach(element => {
-            subreddit[i] = element.value;
-            i++;
+            subreddit.push(element.value);
         });
         makeAfter();
 
@@ -504,13 +508,7 @@ function change() {
 
 
         type = "watching";
-        if (sort_byO != sort_by) {
-            after[subredditId] = "";
-            url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after[subredditId];
-            get(1);
-            updated()
-        }
-        if (subredditO != subreddit) {
+        if (subredditO != subreddit || sort_byO != sort_by) {
             after[subredditId] = "";
             url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + after[subredditId];
             get(1);
