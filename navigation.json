@@ -29,6 +29,11 @@
         "unknown": "<p>unknown</p>",
         "js": "function getActiveIframe() {d = document.querySelectorAll(\".Iframe\");d.forEach(x => {document.getElementById(x.id).contentWindow.changeFocus(x == document.activeElement)});}function foo(){}setTimeout(foo,500);window.setInterval(getActiveIframe, 200);"
     },
+    "FloriPro-Helpers":{
+        "SearchParams": [],
+        "type":"html",
+        "html":"<a href=\"https://floripro.github.io/FloriPro-Helpers\">Fullscreen</a><iframe src=\"https://floripro.github.io/FloriPro-Helpers\" style=\"transform: scale(1);height:900px;width:-webkit-fill-available;\">couldn't load :(</iframe>"
+    },
     "Einstellungen": {
         "type": "multiHtml",
         "Context Menu": "<input type=\"checkbox\" id=\"contxtMenuSwitch\" name=\"contxtMenuSwitch\" onclick=\"setCookie('contextMenu',this.checked,365);location.reload();\"><label for=\"contxtMenuSwitch\">Spezielles Menü</label></div>",
