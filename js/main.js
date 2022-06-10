@@ -1,4 +1,7 @@
-toBoolean = function (input) {
+toBooleanTrue = function (input) {
+    if (input == null) { return true; }
+    return String(input).toLowerCase() === true.toString();
+}; toBoolean = function (input) {
     if (input == null) { return false; }
     return String(input).toLowerCase() === true.toString();
 };
@@ -319,7 +322,7 @@ onmousemove = function (e) {
     mouseY = e.clientY;
 }
 
-if (toBoolean(getCookie("contextMenu"))) {
+if (toBooleanTrue(getCookie("contextMenu"))) {
     if (document.addEventListener) {
         document.addEventListener('contextmenu', function (e) {
             document.getElementById('qrCode').style.display = 'none';
@@ -349,8 +352,6 @@ $(document).bind("click", function (event) {
         document.getElementById("rightClickMenu").style.display = "none";
     } else { pass = false; }
 });
-
-function foo() { }
 
 
 function copy(text) {
