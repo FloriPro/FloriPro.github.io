@@ -32,6 +32,10 @@
         "SearchParams": [],
         "type":"html",
         "html":"<a href=\"https://floripro.github.io/FloriPro-Helpers\">Fullscreen</a><iframe src=\"https://floripro.github.io/FloriPro-Helpers\" style=\"transform: scale(1);height:900px;width:-webkit-fill-available;\">couldn't load :(</iframe>"
+    },"MoodLight":{
+        "SearchParams": [],
+        "type":"html",
+        "html":"<a href=\"https://floripro.github.io/MoodlightTS/out/\">Fullscreen</a><iframe src=\"https://floripro.github.io/MoodlightTS/out/\" style=\"transform: scale(1);height:900px;width:-webkit-fill-available;\">couldn't load :(</iframe>"
     },
     "Einstellungen": {
         "type": "multiHtml",
