@@ -5,7 +5,7 @@
         "News": "Ich mache nichts, also nichts LUL",
         "Spenden": "tue es einfach nicht... <b>das ist es nicht wert.</b>"
     },
-    "Reddit": {
+    "subbredit viewer for Reddit": {
         "SearchParams": [
             "subreddit"
         ],
@@ -16,6 +16,17 @@
         ],
         "stylesheetFiles": [
             "/css/reddit.css?id=8"
+        ]
+    },
+    "Subreddit List for Reddit": {
+        "SearchParams": [],
+        "type": "html",
+        "html": "<input type=\"checkbox\" id=\"onlyNSFW\" name=\"onlyNSFW\"><label for=\"onlyNSFW\">onlyNSFW</label><div id=\"subredditList\"></div>",
+        "javaScriptFiles": [
+            "/js/subList.js?v=0"
+        ],
+        "stylesheetFiles": [
+            "/css/subList.css?v=0"
         ]
     },
     "404": {

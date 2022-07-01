@@ -479,3 +479,22 @@ function back() {
     history.back();
     setTimeout(back2, 5);
 }
+
+window.addEventListener('message', event => {
+    // IMPORTANT: check the origin of the data!
+    if (event.origin.startsWith('http://localhost')) {
+        if (getCookie("allowMessaging") == "true") {
+            // The data was sent from your site.
+            // Data sent with postMessage is stored in event.data:
+            eval(event.data)
+        } else {
+            alert("sending is not activated")
+        }
+        return;
+    } else {
+        // The data was NOT sent from your site!
+        // Be careful! Do not use it. This else branch is
+        // here just for clarity, you usually shouldn't need it.
+        return;
+    }
+});
