@@ -488,10 +488,11 @@ window.addEventListener('message', event => {
             // Data sent with postMessage is stored in event.data:
             eval(event.data)
         } else {
-            alert("sending is not activated")
+            alert("sending is not activated");
         }
         return;
     } else {
+        alert("sending is not activated: " + event.origin);
         // The data was NOT sent from your site!
         // Be careful! Do not use it. This else branch is
         // here just for clarity, you usually shouldn't need it.
