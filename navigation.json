@@ -21,7 +21,7 @@
     "Subreddit List for Reddit": {
         "SearchParams": [],
         "type": "html",
-        "html": "<input type=\"checkbox\" id=\"onlyNSFW\" name=\"onlyNSFW\"><label for=\"onlyNSFW\">onlyNSFW</label><div id=\"subredditList\"></div>",
+        "html": "<div id=\"subredditList\"></div><button onclick='get()'>more</button>",
         "javaScriptFiles": [
             "/js/subList.js?v=0"
         ],
