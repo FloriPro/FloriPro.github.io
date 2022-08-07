@@ -273,7 +273,7 @@ function loadNavBarAndMore(pageName) {
 
     setCookie("washere", "true", 0.1);
     document.title = "FloriPro | " + pageName;
-    if (localStorage["jsonData"] == undefined || getCookie("noCache")) {
+    if (localStorage["jsonData"] == undefined || toBoolean(getCookie("noCache"))) {
         var ts = new Date().getTime();
         var data = { _: ts };
         $.getJSON("/navigation.json", data, function (json) {
