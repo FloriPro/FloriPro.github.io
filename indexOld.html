@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta name="google-site-verification" content="QPMuS5q9u0r5V6AyTItn9HzHaL_b_roFKd7N_mGNQhQ" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="description" content="FloriPro">
+
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/cookie.js"></script>
+    <title>FloriPro</title>
+</head>
+
+<body id="body">
+
+
+    <div class="CookieAccept" id="CookieAccept" style="display: none; opacity: 0;">
+        <h2>Cookies</h2>
+        <p>Diese Website benutzt Cookies.</p>
+        <p>akzeptiere dies, um die Website zu nutzen.
+        </p>
+        <button class="AcceptCookie" onclick="AcceptCookie()">Cookies Akzeptieren</button>
+    </div>
+
+    <div class="Site" style="display: block;">
+
+        <div id="alerts" style="right: 0;position: fixed;max-width: 350px;min-width: 250px;">
+        </div>
+
+        <h1 id="top">FloriPro<br></h1>
+
+        <div class="topnav">
+        </div>
+
+        <div class="topnav2" id="topnav2">
+        </div>
+
+        <br>
+
+        <div id="Text">
+            <p>Die Seite Lädt oder ist ein Fehler aufgetreten</p>
+        </div>
+
+        <footer id="footer">
+            <p>Copyright 2021-2021 FloriPro | <a href="javascript:delData()">delete Cache</a></p>
+        </footer>
+        <a href="#top" class="UpButton" style="font-size: 30px;">Up</a>
+    </div>
+    <div class="unselectable" id="rightClickMenu" style="display:none;" onmouseover="mouseStatus(true);"
+        onmouseout="mouseStatus(false);">
+        <table class="mouseOverBackgoundGray"
+            style="background-color: white;border-collapse: collapse;width: 120%; box-shadow: 0px 0px 50px rgb(0, 0, 0);">
+            <tr onclick="copyTextToClipboard();" id="copyTextToClipboard">
+                <th>
+                    <p>Kopieren</p>
+                </th>
+                <th>
+                    <p>Strg + C</p>
+                </th>
+            </tr>
+            <tr onclick="openLinkInNewTab();" id="openLinkInNewTab">
+                <th>
+                    <p>Link in Neuem Tab öffnen</p>
+                </th>
+                <th>
+                </th>
+            </tr>
+            <tr onclick="selectAll();" id="selectAll">
+                <th>
+                    <p>Alles auswählen</p>
+                </th>
+                <th>
+                    <p>Strg + A</p>
+                </th>
+            </tr>
+            <tr onclick="delData()">
+                <th>
+                    <p>Neuladen</p>
+                </th>
+                <th>
+                    <p>Strg + R</p>
+                </th>
+            </tr>
+            <tr onclick="document.getElementById('rightClickMenu').style.display = 'none';window.print();">
+                <th>
+                    <p>Drucken</p>
+                </th>
+                <th>
+                    <p>Strg + P</p>
+                </th>
+            </tr>
+            <tr onclick="back()">
+                <th>
+                    <p>Zurück</p>
+                </th>
+                <th>
+                </th>
+            </tr>
+            <tr
+                onclick="pass=true;if (document.getElementById('qrCode').style.display=='none'){document.getElementById('qrCode').style.display='';}else{document.getElementById('qrCode').style.display='none';}">
+                <th colspan="2">
+                    <p>QR-Code</p>
+                    <a href="/qrCode.png" download><img id="qrCode"
+                            style="display: none; width: 200px; display: list-item;" src="/qrCode.png"></a>
+                </th>
+            </tr>
+        </table>
+    </div>
+
+</body>
+
+</html>

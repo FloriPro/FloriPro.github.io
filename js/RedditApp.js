@@ -11,6 +11,7 @@ var subredditId = 0;
 var listLoaded = 0
 var noDuplicate = false;
 var viewedMemes = [];
+var isBack = false;
 
 if (localStorage["RedditViewedMemes"] == undefined) {
     localStorage.setItem("RedditViewedMemes", "[]");
@@ -223,11 +224,11 @@ window.onresize = function () {
     if (document.querySelector("#imagesEtc").offsetHeight < window.innerHeight - document.querySelector("#changMeme").offsetHeight && window.innerWidth > (document.querySelector("#comments").offsetWidth + document.querySelector("#imagesEtc").offsetWidth + 32)) {
         scrollStandart = document.querySelector("#imagesEtc").getBoundingClientRect().top + document.documentElement.scrollTop
         document.addEventListener("scroll", scroll);
-        document.querySelector("section").style.display="flex";
+        document.querySelector("section").style.display = "flex";
     } else {
         document.removeEventListener("scroll", scroll);
         document.querySelector("#imagesEtc").style.marginTop = "31.0351px";
-        document.querySelector("section").style.display="unset";
+        document.querySelector("section").style.display = "unset";
     }
     console.log("resize");
 }
@@ -281,7 +282,7 @@ async function get(i) {
 
         console.log(url);
         now = json["data"]["children"][0]["data"];
-        if (viewedMemes.includes(now.permalink) && noDuplicate) {
+        if (viewedMemes.includes(now.permalink) && noDuplicate && !isBack) {
             if (i == 1 || i == 2 || i == -1) { get(-1); } else { get(0); }
             return;
         } else if (noDuplicate) {
@@ -291,6 +292,7 @@ async function get(i) {
             next();
         }
 
+        isBack = false;
 
 
         preloadImages(getImg(now));
@@ -378,6 +380,7 @@ function back() {
     setLoc(subreddit.join(","), afterO[subredditId], sort_by)
 
     url = 'https://www.reddit.com/r/' + subreddit[subredditId] + '/' + sort_by + '/.json?raw_json=1&t=' + sort_time + '&limit=' + limit + "&after=" + afterO[subredditId];
+    isBack = true;
     get(1);
 }
 
@@ -496,7 +499,7 @@ function change() {
         sort_by = document.querySelector("#showingType").value;
         subredditO = subreddit;
 
-        subreddit=[];
+        subreddit = [];
         document.querySelectorAll(".community").forEach(element => {
             subreddit.push(element.value);
         });
