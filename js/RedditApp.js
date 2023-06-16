@@ -1,4 +1,4 @@
-var subreddit = ['memes'];
+var subreddit = ['dankmemes'];
 var sort_by = 'hot';
 var sort_time = 'all';
 var save_dir = 'default';
